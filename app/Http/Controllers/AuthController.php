@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OtpCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,23 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /**
-     * Endpoint API Login dengan validasi hash password.
+     * Map request role parameter to db_sistem_akademik ENUM role
+     */
+    private function mapRole($roleKey)
+    {
+        $map = [
+            'admin'          => 'Admin',
+            'mahasiswa'      => 'Mahasiswa',
+            'dosen_pengajar' => 'Dosen Pengajar',
+            'dosen_wali'     => 'Dosen Wali',
+            'bendahara'      => 'Bendahara',
+        ];
+
+        return $map[strtolower(trim($roleKey))] ?? $roleKey;
+    }
+
+    /**
+     * Endpoint API Login dengan validasi hash password di db_sistem_akademik.users
      */
     public function login(Request $request)
     {
@@ -22,7 +39,7 @@ class AuthController extends Controller
             'password' => 'required|string',
             'role'     => 'nullable|string',
         ], [
-            'username.required' => 'Nomor identitas atau email wajib diisi.',
+            'username.required' => 'Nomor identitas (NPM/NIDN/NIP) atau email wajib diisi.',
             'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
@@ -36,22 +53,24 @@ class AuthController extends Controller
 
         $identifier = trim($request->input('username'));
         $password   = $request->input('password');
-        $role       = $request->input('role');
+        $roleInput  = $request->input('role');
 
-        // Cari user berdasarkan email atau nomor identitas (NIM, NIDN, NIP, ID Staf)
+        // Cari user di db_sistem_akademik berdasarkan email, npm, atau username
         $userQuery = User::where(function ($query) use ($identifier) {
             $query->where('email', $identifier)
-                  ->orWhere('identity_number', $identifier);
+                  ->orWhere('npm', $identifier)
+                  ->orWhere('username', $identifier);
         });
 
-        if (!empty($role)) {
-            $userQuery->where('role', $role);
+        if (!empty($roleInput)) {
+            $mappedRole = $this->mapRole($roleInput);
+            $userQuery->where('role', $mappedRole);
         }
 
         $user = $userQuery->first();
 
-        // Validasi user & hash password
-        if (!$user || !Hash::check($password, $user->password)) {
+        // Validasi user & hash password (password_hash)
+        if (!$user || !Hash::check($password, $user->password_hash)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Nomor identitas/email atau kata sandi tidak cocok. Silakan periksa kembali.'
@@ -65,18 +84,19 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login berhasil! Selamat datang kembali di SI-AKAD.',
             'user' => [
-                'id'              => $user->id,
-                'name'            => $user->name,
-                'email'           => $user->email,
-                'role'            => $user->role,
-                'identity_number' => $user->identity_number,
-                'avatar'          => $user->avatar ?? strtoupper(substr($user->name, 0, 2)),
+                'id'       => $user->id,
+                'npm'      => $user->npm,
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'username' => $user->username,
+                'role'     => $user->role,
+                'avatar'   => strtoupper(substr($user->name, 0, 2)),
             ]
         ]);
     }
 
     /**
-     * Endpoint Login menggunakan Akun Google.
+     * Endpoint Login menggunakan Akun Google (Simulasi/API).
      */
     public function googleLogin(Request $request)
     {
@@ -100,18 +120,18 @@ class AuthController extends Controller
         $name     = $request->input('name', 'Pengguna Google');
         $googleId = $request->input('google_id', 'google_' . md5($email));
 
-        // Cari user atau buat baru sebagai mahasiswa jika belum ada
+        // Cari user atau buat baru di db_sistem_akademik.users
         $user = User::where('email', $email)->first();
 
         if (!$user) {
             $user = User::create([
-                'name'            => $name,
-                'email'           => $email,
-                'role'            => 'mahasiswa',
-                'identity_number' => '220101' . rand(1000, 9999),
-                'avatar'          => strtoupper(substr($name, 0, 1)),
-                'google_id'       => $googleId,
-                'password'        => Hash::make('GoogleAuth_' . bin2hex(random_bytes(8))),
+                'npm'           => '220101' . rand(1000, 9999),
+                'name'          => $name,
+                'email'         => $email,
+                'username'      => explode('@', $email)[0],
+                'role'          => 'Mahasiswa',
+                'google_id'     => $googleId,
+                'password_hash' => Hash::make('GoogleAuth_' . bin2hex(random_bytes(8))),
             ]);
         } else {
             if (empty($user->google_id)) {
@@ -126,22 +146,22 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login dengan akun Google berhasil!',
             'user' => [
-                'id'              => $user->id,
-                'name'            => $user->name,
-                'email'           => $user->email,
-                'role'            => $user->role,
-                'identity_number' => $user->identity_number,
-                'avatar'          => $user->avatar ?? 'G',
+                'id'       => $user->id,
+                'npm'      => $user->npm,
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'role'     => $user->role,
+                'avatar'   => 'G',
             ]
         ]);
     }
 
     /**
-     * Redirect ke halaman otorisasi Google OAuth 2.0 resmi.
+     * Redirect ke Google OAuth 2.0 resmi
      */
     public function googleRedirect()
     {
-        $clientId = config('services.google.client_id');
+        $clientId    = config('services.google.client_id');
         $redirectUri = config('services.google.redirect');
 
         if (empty($clientId)) {
@@ -161,7 +181,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Callback Google OAuth 2.0 setelah pengguna memilih akun Google.
+     * Callback Google OAuth 2.0 resmi
      */
     public function googleCallback(Request $request)
     {
@@ -175,7 +195,6 @@ class AuthController extends Controller
         $clientSecret = config('services.google.client_secret');
         $redirectUri  = config('services.google.redirect');
 
-        // Tukar authorization code dengan access token
         $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
             'code'          => $code,
             'client_id'     => $clientId,
@@ -192,7 +211,6 @@ class AuthController extends Controller
         $tokenData   = $response->json();
         $accessToken = $tokenData['access_token'] ?? null;
 
-        // Ambil data profil pengguna dari Google
         $userResponse = Http::withToken($accessToken)->get('https://www.googleapis.com/oauth2/v3/userinfo');
 
         if (!$userResponse->successful()) {
@@ -208,13 +226,13 @@ class AuthController extends Controller
 
         if (!$user) {
             $user = User::create([
-                'name'            => $name,
-                'email'           => $email,
-                'role'            => 'mahasiswa',
-                'identity_number' => '220101' . rand(1000, 9999),
-                'avatar'          => strtoupper(substr($name, 0, 1)),
-                'google_id'       => $googleId,
-                'password'        => Hash::make('GoogleOAuth_' . bin2hex(random_bytes(8))),
+                'npm'           => '220101' . rand(1000, 9999),
+                'name'          => $name,
+                'email'         => $email,
+                'username'      => explode('@', $email)[0],
+                'role'          => 'Mahasiswa',
+                'google_id'     => $googleId,
+                'password_hash' => Hash::make('GoogleOAuth_' . bin2hex(random_bytes(8))),
             ]);
         } else {
             if (empty($user->google_id)) {
@@ -229,7 +247,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Endpoint Kirim Kode OTP Lupa Password.
+     * Endpoint Kirim Kode OTP Lupa Password Sekali Pakai (Tabel otp_codes di db_sistem_akademik)
      */
     public function forgotPassword(Request $request)
     {
@@ -248,34 +266,47 @@ class AuthController extends Controller
         }
 
         $email = strtolower(trim($request->input('email')));
-        $user  = User::where('email', $email)->first();
+
+        // Validasi apakah email terdaftar pada tabel users di db_sistem_akademik
+        $user = User::where('email', $email)->first();
 
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Alamat email tidak terdaftar dalam pangkalan data SI-AKAD.'
+                'message' => 'Alamat email tidak terdaftar pada akun users di database SI-AKAD.'
             ], 404);
         }
 
-        // Generate 6 digit OTP acak
-        $otpCode = (string) mt_rand(100000, 999999);
-        $user->otp_code = $otpCode;
-        $user->otp_expires_at = now()->addMinutes(15);
-        $user->save();
+        // Tandai/nonaktifkan OTP lama yang belum terpakai untuk user ini (agar hanya ada 1 OTP aktif)
+        OtpCode::where('user_id', $user->id)
+            ->where('is_used', 0)
+            ->update(['is_used' => 1]);
 
-        // Catat ke log sistem
-        Log::info("OTP Reset Password dikirim ke [{$user->email}]: {$otpCode}");
+        // Hasilkan kode 6 digit OTP acak
+        $otpCode = str_pad((string) mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+
+        // Simpan ke tabel otp_codes di db_sistem_akademik dengan masa berlaku 15 menit dan status is_used = 0 (sekali pakai)
+        $otpRecord = OtpCode::create([
+            'user_id'    => $user->id,
+            'otp_code'   => $otpCode,
+            'expires_at' => now()->addMinutes(15),
+            'is_used'    => 0,
+            'created_at' => now(),
+        ]);
+
+        // Catat pengiriman OTP ke log sistem (simulasi pengiriman email ke email terdaftar)
+        Log::info("OTP Sekali Pakai dikirim ke email terdaftar [{$user->email}] untuk User ID #{$user->id}: {$otpCode}");
 
         return response()->json([
             'success'  => true,
-            'message'  => "Kode OTP telah berhasil dikirim ke {$user->email}.",
-            'otp_demo' => $otpCode, // Disertakan untuk kemudahan testing interaktif
+            'message'  => "Kode OTP sekali pakai telah berhasil dikirimkan ke email terdaftar: {$user->email}.",
+            'otp_demo' => $otpCode, // Disertakan untuk kemudahan demonstrasi & testing langsung
             'expires_in_minutes' => 15,
         ]);
     }
 
     /**
-     * Endpoint Verifikasi Kode OTP.
+     * Endpoint Verifikasi Kode OTP dari tabel otp_codes (db_sistem_akademik)
      */
     public function verifyOtp(Request $request)
     {
@@ -303,18 +334,31 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun dengan email ini tidak ditemukan.'
+                'message' => 'Akun dengan email ini tidak ditemukan di database.'
             ], 404);
         }
 
-        if (empty($user->otp_code) || $user->otp_code !== $otp) {
+        // Cari record OTP yang cocok di tabel otp_codes
+        $otpRecord = OtpCode::where('user_id', $user->id)
+            ->where('otp_code', $otp)
+            ->latest('id')
+            ->first();
+
+        if (!$otpRecord) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode OTP yang Anda masukkan keliru. Silakan coba lagi.'
+                'message' => 'Kode OTP yang Anda masukkan keliru.'
             ], 422);
         }
 
-        if (empty($user->otp_expires_at) || now()->isAfter($user->otp_expires_at)) {
+        if ($otpRecord->is_used) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP ini sudah pernah digunakan (hanya berlaku sekali pakai). Silakan minta kode baru.'
+            ], 422);
+        }
+
+        if (now()->isAfter($otpRecord->expires_at)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Kode OTP telah kedaluwarsa. Silakan minta kode OTP baru.'
@@ -323,12 +367,12 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Kode OTP berhasil diverifikasi. Silakan masukkan kata sandi baru Anda.'
+            'message' => 'Kode OTP valid. Silakan masukkan kata sandi baru Anda.'
         ]);
     }
 
     /**
-     * Endpoint Reset Password Baru dengan OTP.
+     * Endpoint Reset Password Baru & Mengubah OTP Menjadi Sudah Terpakai (Sekali Pakai)
      */
     public function resetPassword(Request $request)
     {
@@ -362,22 +406,32 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun tidak ditemukan.'
+                'message' => 'Akun tidak ditemukan di database.'
             ], 404);
         }
 
-        if (empty($user->otp_code) || $user->otp_code !== $otp || now()->isAfter($user->otp_expires_at)) {
+        // Cari kode OTP di tabel otp_codes
+        $otpRecord = OtpCode::where('user_id', $user->id)
+            ->where('otp_code', $otp)
+            ->latest('id')
+            ->first();
+
+        if (!$otpRecord || $otpRecord->is_used || now()->isAfter($otpRecord->expires_at)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kode OTP tidak valid atau telah kedaluwarsa.'
+                'message' => 'Kode OTP tidak valid, sudah pernah dipakai, atau telah kedaluwarsa.'
             ], 422);
         }
 
-        // Hash kata sandi baru secara aman menggunakan Bcrypt
-        $user->password = Hash::make($password);
-        $user->otp_code = null;
-        $user->otp_expires_at = null;
+        // 1. Simpan kata sandi baru dengan hash Bcrypt ke kolom password_hash
+        $user->password_hash = Hash::make($password);
         $user->save();
+
+        // 2. Kunci status OTP menjadi is_used = 1 (SEKALI PAKAI)
+        $otpRecord->is_used = 1;
+        $otpRecord->save();
+
+        Log::info("Password untuk User ID #{$user->id} ({$user->email}) berhasil diperbarui dan OTP {$otp} dinonaktifkan (is_used=1).");
 
         return response()->json([
             'success' => true,

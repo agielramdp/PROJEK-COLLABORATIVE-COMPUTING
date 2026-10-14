@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,45 +12,57 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * The attributes that are mass assignable in db_sistem_akademik.users
      */
     protected $fillable = [
+        'npm',
         'name',
         'email',
+        'username',
+        'password_hash',
         'role',
-        'identity_number',
-        'avatar',
         'google_id',
-        'otp_code',
-        'otp_expires_at',
-        'password',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
-        'otp_code',
     ];
 
     /**
      * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'otp_expires_at' => 'datetime',
-            'password' => 'hashed',
+            'password_hash' => 'hashed',
         ];
+    }
+
+    /**
+     * Override to use password_hash column in db_sistem_akademik
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function getAuthPasswordName()
+    {
+        return 'password_hash';
+    }
+
+    /**
+     * Relasi ke tabel otp_codes di db_sistem_akademik
+     */
+    public function otpCodes()
+    {
+        return $this->hasMany(OtpCode::class, 'user_id');
     }
 }
