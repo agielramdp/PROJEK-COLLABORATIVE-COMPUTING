@@ -56,25 +56,18 @@
             z-index: 0;
         }
 
-        /* Top global nav back button for Google view */
-        .global-top-back {
-            position: fixed;
-            top: 24px;
-            left: 32px;
-            display: none;
+        /* Google button not-configured notice */
+        .google-not-configured-msg {
+            display: flex;
             align-items: center;
-            gap: 10px;
-            color: #94a3b8;
-            font-size: 14.5px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            z-index: 50;
-            transition: color 0.2s ease;
-        }
-
-        .global-top-back:hover {
-            color: #ffffff;
+            gap: 8px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 12.5px;
+            color: #92400e;
+            margin-top: 10px;
         }
 
         /* Main Container Card */
@@ -94,14 +87,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Wide single card style for Google Account Chooser */
-        .portal-wrapper.google-mode {
-            max-width: 900px;
-            min-height: 540px;
-            grid-template-columns: 1fr;
-            background: #ffffff;
-            border-radius: 16px;
-        }
+
 
         /* LEFT COLUMN */
         .left-panel {
@@ -1256,14 +1242,6 @@
 
     <div class="page-background"></div>
 
-    <!-- Top back link for Google screen (matches screenshot 1) -->
-    <a href="javascript:void(0)" class="global-top-back" id="globalTopBack" onclick="navigateView('login')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        <span>Kembali ke halaman utama</span>
-    </a>
-
     <!-- MAIN CARD CONTAINER -->
     <div class="portal-wrapper" id="portalWrapper">
         
@@ -1497,19 +1475,20 @@
 
                         <div class="auth-divider">atau masuk dengan</div>
 
-                        <!-- Google Account button -->
+                        <!-- Google OAuth Button: selalu redirect ke Google resmi -->
                         @if(!empty($googleConfigured))
-                        <a href="{{ route('google.redirect') }}" class="btn-google-login" style="text-decoration: none;">
+                        <a href="{{ route('google.redirect') }}" class="btn-google-login" style="text-decoration: none;" id="btnGoogleOAuth">
                             <svg class="google-g-logo" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                             </svg>
-                            <span>Masuk dengan Akun Google Real</span>
+                            <span>Masuk dengan Akun Google</span>
                         </a>
                         @else
-                        <button type="button" class="btn-google-login" onclick="navigateView('google')">
+                        {{-- Google belum dikonfigurasi: tampil tombol disable + petunjuk --}}
+                        <button type="button" class="btn-google-login" disabled style="opacity:0.55; cursor:not-allowed;" title="Google OAuth belum dikonfigurasi di server">
                             <svg class="google-g-logo" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -1518,6 +1497,10 @@
                             </svg>
                             <span>Masuk dengan Akun Google</span>
                         </button>
+                        <div class="google-not-configured-msg">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            <span>Isi <code>GOOGLE_CLIENT_ID</code> &amp; <code>GOOGLE_CLIENT_SECRET</code> di file <code>.env</code> untuk mengaktifkan login Google.</span>
+                        </div>
                         @endif
 
                         <!-- Demo Auto-Fill helper -->
@@ -1720,76 +1703,6 @@
             </svg>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- VIEW 3: GOOGLE ACCOUNT CHOOSER (MATCHES SCREENSHOT 1)        -->
-        <!-- ============================================================ -->
-        <div class="google-account-container" id="googleAccountContainer">
-            <!-- Header bar -->
-            <div class="google-card-header">
-                <svg class="google-g-logo" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                </svg>
-                <span>Login dengan Google</span>
-            </div>
-
-            <!-- Body Grid -->
-            <div class="google-body-grid">
-                
-                <!-- Left Title -->
-                <div class="google-left-col">
-                    <h2 class="google-title">Choose an account</h2>
-                    <p class="google-subtitle">
-                        Untuk melanjutkan ke <strong style="color: #0b5ed7;">SI-AKAD</strong>
-                    </p>
-                </div>
-
-                <!-- Right Account List -->
-                <div class="google-accounts-list">
-                    
-                    <!-- Account 1: Mahasiswa 123 (matching screenshot) -->
-                    <div class="google-account-item" onclick="loginWithGoogleAccount('mahasiswa123@gmail.com', 'Mahasiswa')">
-                        <div class="google-avatar-circle" style="background-color: #0d59c9;">M</div>
-                        <div class="google-account-info">
-                            <span class="google-user-name">Mahasiswa</span>
-                            <span class="google-user-email">mahasiswa123@gmail.com</span>
-                        </div>
-                    </div>
-
-                    <!-- Account 2: Mahasiswa (Secondary) -->
-                    <div class="google-account-item" onclick="loginWithGoogleAccount('mahasiswa123@gmail.com', 'Mahasiswa')">
-                        <div class="google-avatar-circle" style="background-color: #0d59c9;">M</div>
-                        <div class="google-account-info">
-                            <span class="google-user-name">Mahasiswa</span>
-                            <span class="google-user-email">mahasiswa123@gmail.com</span>
-                        </div>
-                    </div>
-
-                    <!-- Account 3: Gunakan akun lain -->
-                    <div class="google-account-item add-account" onclick="promptCustomGoogleAccount()">
-                        <div class="google-icon-circle-outline">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <circle cx="12" cy="7" r="4"/>
-                                <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
-                            </svg>
-                        </div>
-                        <div class="google-account-info">
-                            <span class="google-user-name" style="font-weight: 500; font-size: 14.5px;">Gunakan akun lain</span>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Notice -->
-                    <p class="google-disclaimer">
-                        Sebelum menggunakan aplikasi ini, Anda dapat meninjau Kebijakan Privasi dan Persyaratan Layanan SI-AKAD
-                    </p>
-
-                </div>
-
-            </div>
-        </div>
-
     </div>
 
     <!-- SUCCESS LOGGED IN MODAL -->
@@ -1905,14 +1818,11 @@
         let forgotEmailState = '';
         let verifiedOtpState = '';
 
-        // Navigate between views: 'roles', 'login', 'google', 'forgot'
+        // Navigate between views: 'roles', 'login', 'forgot'
         function navigateView(viewName) {
-            const wrapper = document.getElementById('portalWrapper');
             const mainLeft = document.getElementById('mainLeftPanel');
             const mainRight = document.getElementById('mainRightPanel');
             const securityRight = document.getElementById('securityRightPanel');
-            const googleContainer = document.getElementById('googleAccountContainer');
-            const globalTopBack = document.getElementById('globalTopBack');
 
             const viewRoles = document.getElementById('viewRoleSelection');
             const viewLogin = document.getElementById('viewLoginForm');
@@ -1920,9 +1830,6 @@
 
             // Reset visibility
             [viewRoles, viewLogin, viewForgot].forEach(v => v.classList.remove('active'));
-            wrapper.classList.remove('google-mode');
-            googleContainer.classList.remove('active');
-            globalTopBack.style.display = 'none';
 
             if (viewName === 'roles') {
                 mainLeft.style.display = 'flex';
@@ -1934,13 +1841,6 @@
                 mainRight.style.display = 'flex';
                 securityRight.style.display = 'none';
                 viewLogin.classList.add('active');
-            } else if (viewName === 'google') {
-                mainLeft.style.display = 'none';
-                mainRight.style.display = 'none';
-                securityRight.style.display = 'none';
-                wrapper.classList.add('google-mode');
-                googleContainer.classList.add('active');
-                globalTopBack.style.display = 'flex';
             } else if (viewName === 'forgot') {
                 mainLeft.style.display = 'flex';
                 mainRight.style.display = 'none';
@@ -2070,8 +1970,10 @@
             }
         }
 
+        // Google OAuth: login dilakukan via redirect server-side (/auth/google/redirect)
+        // Fungsi ini hanya digunakan jika perlu fallback manual (tidak dipakai dalam flow normal)
         // ==========================================
-        // API CALL: GOOGLE AUTHENTICATION
+        // API CALL: GOOGLE AUTHENTICATION (Fallback)
         // ==========================================
         async function loginWithGoogleAccount(email, name) {
             showToast('Menghubungkan ke Akun Google: ' + email + '...');
@@ -2098,14 +2000,6 @@
                 }
             } catch (err) {
                 showToast('Gagal menghubungi endpoint Google auth.', true);
-            }
-        }
-
-        function promptCustomGoogleAccount() {
-            const email = prompt('Masukkan alamat email Google Anda:', 'mahasiswa123@gmail.com');
-            if (email && email.trim() !== '') {
-                const name = prompt('Masukkan Nama Lengkap Anda:', 'Mahasiswa Baru');
-                loginWithGoogleAccount(email.trim(), name ? name.trim() : 'Pengguna Google');
             }
         }
 
@@ -2345,18 +2239,17 @@
         // Handle Google OAuth callback feedback on load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('logged_in') === 'google') {
-                const name = urlParams.get('name') || 'Pengguna Google';
-                const email = urlParams.get('email') || '';
-                showSuccessModal({
-                    name: decodeURIComponent(name),
-                    email: decodeURIComponent(email),
-                    role: 'mahasiswa',
-                    avatar: 'G'
-                });
-                showToast('Login Google Berhasil! Selamat Datang.', false);
-            } else if (urlParams.get('error')) {
+            const error = urlParams.get('error');
+
+            if (error === 'google_not_registered') {
+                const email = decodeURIComponent(urlParams.get('email') || '');
+                showToast('Email Google ' + (email ? '(' + email + ')' : '') + ' tidak terdaftar di SI-AKAD. Silakan login dengan username/password.', true);
+            } else if (error === 'google_not_configured') {
+                showToast('Google OAuth belum dikonfigurasi oleh administrator sistem.', true);
+            } else if (error === 'google_auth_failed' || error === 'google_token_failed' || error === 'google_user_failed') {
                 showToast('Login Google dibatalkan atau terjadi kesalahan pada otentikasi.', true);
+            } else if (error === 'google_email_missing') {
+                showToast('Gagal mendapatkan alamat email dari akun Google.', true);
             }
         });
     </script>

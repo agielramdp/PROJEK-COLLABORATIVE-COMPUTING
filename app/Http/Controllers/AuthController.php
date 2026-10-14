@@ -174,7 +174,7 @@ class AuthController extends Controller
             'response_type' => 'code',
             'scope'         => 'openid profile email',
             'access_type'   => 'offline',
-            'prompt'        => 'select_account',
+            'prompt'        => 'select_account', // Muncul pilih akun dari device/browser
         ]);
 
         return redirect('https://accounts.google.com/o/oauth2/v2/auth?' . $query);
@@ -221,29 +221,37 @@ class AuthController extends Controller
         $email      = strtolower($googleUser['email'] ?? '');
         $name       = $googleUser['name'] ?? 'Pengguna Google';
         $googleId   = $googleUser['sub'] ?? null;
+        $picture    = $googleUser['picture'] ?? null;
 
+        if (empty($email)) {
+            return redirect('/login?error=google_email_missing');
+        }
+
+        // Cari user yang sudah terdaftar di db_sistem_akademik berdasarkan email
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            $user = User::create([
-                'npm'           => '220101' . rand(1000, 9999),
-                'name'          => $name,
-                'email'         => $email,
-                'username'      => explode('@', $email)[0],
-                'role'          => 'Mahasiswa',
-                'google_id'     => $googleId,
-                'password_hash' => Hash::make('GoogleOAuth_' . bin2hex(random_bytes(8))),
-            ]);
-        } else {
-            if (empty($user->google_id)) {
-                $user->google_id = $googleId;
-                $user->save();
-            }
+            // Email tidak terdaftar di sistem — tolak login
+            Log::warning("Google OAuth: email [{$email}] tidak terdaftar di database SI-AKAD.");
+            return redirect('/login?error=google_not_registered&email=' . urlencode($email));
+        }
+
+        // Update google_id jika belum ada
+        if (empty($user->google_id)) {
+            $user->google_id = $googleId;
+            $user->save();
         }
 
         Auth::login($user, true);
 
-        return redirect('/?logged_in=google&name=' . urlencode($user->name) . '&email=' . urlencode($user->email));
+        Log::info("Google OAuth login berhasil: User ID #{$user->id} ({$user->email}) role: {$user->role}");
+
+        // Redirect ke halaman utama dengan flash session
+        return redirect('/')->with('google_login_success', [
+            'name'  => $user->name,
+            'email' => $user->email,
+            'role'  => $user->role,
+        ]);
     }
 
     /**
