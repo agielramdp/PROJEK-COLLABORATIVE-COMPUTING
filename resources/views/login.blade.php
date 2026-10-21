@@ -444,7 +444,7 @@
         }
 
         /* ============================================================ */
-        /* RIGHT PANEL: SECURITY ILLUSTRATION (FOR LUPA PASSWORD VIEW)  */
+        /* RIGHT PANEL: SECURITY ILLUSTRATION (SHARED: FORGOT + ADMIN LOGIN) */
         /* ============================================================ */
         .right-panel-security {
             position: relative;
@@ -471,6 +471,1061 @@
             max-width: 440px;
             height: auto;
             filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.3));
+        }
+
+        /* ============================================================ */
+        /* ADMIN LOGIN REDESIGNED STYLES (MATCHING REFERENCE IMAGE)     */
+        /* ============================================================ */
+
+        /* Admin login specific back nav */
+        .admin-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .admin-back-nav:hover {
+            color: #1e293b;
+            transform: translateX(-3px);
+        }
+
+        /* Admin Login Title */
+        .admin-login-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #0d1b2a;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .admin-login-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        /* Admin form inputs */
+        .admin-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .admin-input-icon {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .admin-form-input {
+            width: 100%;
+            height: 50px;
+            padding: 10px 14px 10px 44px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .admin-form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .admin-form-input:focus {
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+            background: #fff;
+        }
+
+        .admin-toggle-pass {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-toggle-pass:hover { color: #475569; }
+
+        /* Admin Login Button */
+        .admin-login-btn {
+            width: 100%;
+            height: 50px;
+            background: #1e3a8a;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(30, 58, 138, 0.3);
+            letter-spacing: 0.1px;
+        }
+
+        .admin-login-btn:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+        }
+
+        .admin-login-btn:active {
+            transform: translateY(0);
+        }
+
+        .admin-login-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Google Login Button for admin */
+        .admin-google-btn {
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .admin-google-btn:hover {
+            border-color: #b0bccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        /* Lupa password link admin */
+        .admin-forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+        .admin-forgot-link:hover {
+            color: #1e3a8a;
+        }
+
+        /* Right panel for admin login - server/shield illustration */
+        .right-panel-admin-login {
+            position: relative;
+            background: linear-gradient(135deg, #1a3a6b 0%, #0f2550 40%, #0a1a3f 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .right-panel-admin-login.active {
+            display: flex;
+        }
+
+        .right-panel-admin-login::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(30, 80, 180, 0.45) 0%, transparent 65%),
+                        radial-gradient(ellipse at 30% 80%, rgba(10, 50, 120, 0.4) 0%, transparent 55%);
+            z-index: 1;
+        }
+
+        /* Watermark SI letters */
+        .admin-right-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================================ */
+        /* MAHASISWA LOGIN REDESIGNED STYLES (GREEN THEME)              */
+        /* ============================================================ */
+
+        /* Mahasiswa back nav */
+        .mahasiswa-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .mahasiswa-back-nav:hover {
+            color: #1e293b;
+            transform: translateX(-3px);
+        }
+
+        /* Mahasiswa Login Title */
+        .mahasiswa-login-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #14532d;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .mahasiswa-login-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        /* Mahasiswa form inputs */
+        .mahasiswa-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .mahasiswa-input-icon {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .mahasiswa-form-input {
+            width: 100%;
+            height: 50px;
+            padding: 10px 14px 10px 44px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .mahasiswa-form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .mahasiswa-form-input:focus {
+            border-color: #166534;
+            box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.12);
+            background: #fff;
+        }
+
+        .mahasiswa-toggle-pass {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mahasiswa-toggle-pass:hover { color: #475569; }
+
+        /* Mahasiswa Login Button */
+        .mahasiswa-login-btn {
+            width: 100%;
+            height: 50px;
+            background: #166534;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(22, 101, 52, 0.3);
+            letter-spacing: 0.1px;
+        }
+
+        .mahasiswa-login-btn:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 101, 52, 0.4);
+        }
+
+        .mahasiswa-login-btn:active {
+            transform: translateY(0);
+        }
+
+        .mahasiswa-login-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Google Login Button for mahasiswa */
+        .mahasiswa-google-btn {
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .mahasiswa-google-btn:hover {
+            border-color: #b0bccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        /* Lupa password link mahasiswa */
+        .mahasiswa-forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+        .mahasiswa-forgot-link:hover {
+            color: #166534;
+        }
+
+        /* Right panel for mahasiswa login - education network illustration */
+        .right-panel-mahasiswa-login {
+            position: relative;
+            background: linear-gradient(135deg, #1a4731 0%, #14532d 40%, #0f3d22 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .right-panel-mahasiswa-login::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 55% 35%, rgba(34, 120, 80, 0.5) 0%, transparent 65%),
+                        radial-gradient(ellipse at 25% 75%, rgba(15, 70, 40, 0.45) 0%, transparent 55%);
+            z-index: 1;
+        }
+
+        .mahasiswa-right-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================================ */
+        /* DOSEN PENGAJAR LOGIN REDESIGNED STYLES (PURPLE THEME)        */
+        /* ============================================================ */
+
+        .dosen-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dosen-back-nav:hover {
+            color: #1e293b;
+            transform: translateX(-3px);
+        }
+
+        .dosen-login-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #4c1d95;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .dosen-login-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        .dosen-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .dosen-input-icon {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .dosen-form-input {
+            width: 100%;
+            height: 50px;
+            padding: 10px 14px 10px 44px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .dosen-form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .dosen-form-input:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+            background: #fff;
+        }
+
+        .dosen-toggle-pass {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dosen-toggle-pass:hover { color: #475569; }
+
+        .dosen-login-btn {
+            width: 100%;
+            height: 50px;
+            background: #6d28d9;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(109, 40, 217, 0.3);
+            letter-spacing: 0.1px;
+        }
+
+        .dosen-login-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(109, 40, 217, 0.4);
+        }
+
+        .dosen-login-btn:active { transform: translateY(0); }
+
+        .dosen-login-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .dosen-google-btn {
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dosen-google-btn:hover {
+            border-color: #b0bccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        .dosen-forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+        .dosen-forgot-link:hover { color: #6d28d9; }
+
+        /* Right panel for dosen pengajar - education/teaching illustration */
+        .right-panel-dosen-login {
+            position: relative;
+            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 40%, #6d28d9 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .right-panel-dosen-login::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 35%, rgba(139, 92, 246, 0.5) 0%, transparent 65%),
+                        radial-gradient(ellipse at 25% 75%, rgba(76, 29, 149, 0.45) 0%, transparent 55%);
+            z-index: 1;
+        }
+
+        .dosen-right-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================================ */
+        /* DOSEN WALI LOGIN REDESIGNED STYLES (BROWN/AMBER THEME)       */
+        /* ============================================================ */
+
+        .dosen-wali-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dosen-wali-back-nav:hover {
+            color: #1e293b;
+            transform: translateX(-3px);
+        }
+
+        .dosen-wali-login-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #78350f;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .dosen-wali-login-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        .dosen-wali-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .dosen-wali-input-icon {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .dosen-wali-form-input {
+            width: 100%;
+            height: 50px;
+            padding: 10px 14px 10px 44px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .dosen-wali-form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .dosen-wali-form-input:focus {
+            border-color: #92400e;
+            box-shadow: 0 0 0 3px rgba(146, 64, 14, 0.12);
+            background: #fff;
+        }
+
+        .dosen-wali-toggle-pass {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dosen-wali-toggle-pass:hover { color: #475569; }
+
+        .dosen-wali-login-btn {
+            width: 100%;
+            height: 50px;
+            background: #92400e;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(146, 64, 14, 0.3);
+            letter-spacing: 0.1px;
+        }
+
+        .dosen-wali-login-btn:hover {
+            background: #a16207;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(146, 64, 14, 0.4);
+        }
+
+        .dosen-wali-login-btn:active { transform: translateY(0); }
+
+        .dosen-wali-login-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .dosen-wali-google-btn {
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dosen-wali-google-btn:hover {
+            border-color: #b0bccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        .dosen-wali-forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+        .dosen-wali-forgot-link:hover { color: #92400e; }
+
+        /* Right panel for dosen wali - academic counseling illustration */
+        .right-panel-dosen-wali {
+            position: relative;
+            background: linear-gradient(135deg, #78350f 0%, #92400e 45%, #a16207 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .right-panel-dosen-wali::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 55% 35%, rgba(180, 100, 30, 0.5) 0%, transparent 65%),
+                        radial-gradient(ellipse at 25% 75%, rgba(100, 50, 10, 0.45) 0%, transparent 55%);
+            z-index: 1;
+        }
+
+        .dosen-wali-right-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================================ */
+        /* BENDAHARA LOGIN REDESIGNED STYLES (GOLDEN/AMBER THEME)       */
+        /* ============================================================ */
+
+        .bendahara-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .bendahara-back-nav:hover {
+            color: #1e293b;
+            transform: translateX(-3px);
+        }
+
+        .bendahara-login-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #b45309;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .bendahara-login-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        .bendahara-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .bendahara-input-icon {
+            position: absolute;
+            left: 14px;
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .bendahara-form-input {
+            width: 100%;
+            height: 50px;
+            padding: 10px 14px 10px 44px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .bendahara-form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .bendahara-form-input:focus {
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+            background: #fff;
+        }
+
+        .bendahara-toggle-pass {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bendahara-toggle-pass:hover { color: #475569; }
+
+        .bendahara-login-btn {
+            width: 100%;
+            height: 50px;
+            background: #d97706;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+            letter-spacing: 0.1px;
+        }
+
+        .bendahara-login-btn:hover {
+            background: #b45309;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45);
+        }
+
+        .bendahara-login-btn:active { transform: translateY(0); }
+
+        .bendahara-login-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .bendahara-google-btn {
+            width: 100%;
+            height: 50px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .bendahara-google-btn:hover {
+            border-color: #b0bccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        .bendahara-forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+        .bendahara-forgot-link:hover { color: #b45309; }
+
+        /* Right panel for bendahara - finance illustration */
+        .right-panel-bendahara {
+            position: relative;
+            background: linear-gradient(135deg, #c27700 0%, #d97706 45%, #f59e0b 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .right-panel-bendahara::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 30%, rgba(255,200,50,0.35) 0%, transparent 60%),
+                        radial-gradient(ellipse at 25% 75%, rgba(180,100,0,0.3) 0%, transparent 55%);
+            z-index: 1;
+        }
+
+        .bendahara-right-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ============================================================ */
@@ -1254,7 +2309,7 @@
             <div class="left-content">
                 
                 <!-- TOP LOGO & BRAND (SHARED HEADER) -->
-                <div class="brand-header" onclick="navigateView('roles')">
+                <div class="brand-header" id="sharedBrandHeader" onclick="navigateView('roles')">
                     <!-- Accurate SI-AKAD Emblem SVG -->
                     <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Golden crest badge / crown -->
@@ -1401,84 +2456,66 @@
                     </div>
                 </div>
 
-                <!-- SUB-VIEW 2: ROLE LOGIN FORM (CONNECTS TO /api/login) -->
-                <div class="view-section" id="viewLoginForm" style="margin-top: 24px;">
-                    <button type="button" class="back-nav-link" onclick="navigateView('roles')">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                        Pilih Role Lain
-                    </button>
+                <!-- SUB-VIEW 2: ROLE LOGIN FORM (REDESIGNED FOR ADMIN - MATCHES REFERENCE IMAGE) -->
+                <div class="view-section" id="viewLoginForm">
 
-                    <div class="active-role-badge-row">
-                        <div class="active-role-badge" id="activeRoleBadge">
-                            <span>●</span>
-                            <span id="badgeRoleTitle">Admin</span>
+                    <!-- Bagian non-admin: badge + header lama (hanya tampil jika bukan admin) -->
+                    <div id="nonAdminLoginSection">
+                        <button type="button" class="back-nav-link" onclick="navigateView('roles')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                            Pilih Role Lain
+                        </button>
+
+                        <div class="active-role-badge-row">
+                            <div class="active-role-badge" id="activeRoleBadge">
+                                <span>●</span>
+                                <span id="badgeRoleTitle">Admin</span>
+                            </div>
+                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">Pangkalan Data Aktif</span>
                         </div>
-                        <span style="font-size: 12px; color: #64748b; font-weight: 600;">Pangkalan Data Aktif</span>
-                    </div>
 
-                    <h2 class="form-header-title" id="formHeaderTitle">Masuk ke Akun Anda</h2>
-                    <p class="form-header-subtitle" id="formHeaderDesc">Silakan masukkan identitas dan kata sandi Anda</p>
+                        <h2 class="form-header-title" id="formHeaderTitle">Masuk ke Akun Anda</h2>
+                        <p class="form-header-subtitle" id="formHeaderDesc">Silakan masukkan identitas dan kata sandi Anda</p>
 
-                    <form id="authLoginForm" onsubmit="handleApiLoginSubmit(event)">
-                        <input type="hidden" id="selectedRoleInput" name="role" value="admin">
-
-                        <!-- Identifier input -->
                         <div class="form-group">
-                            <label class="form-label" for="usernameInput" id="usernameLabel">Nomor Identitas</label>
+                            <label class="form-label" for="usernameInputNonAdmin" id="usernameLabelNonAdmin">Nomor Identitas</label>
                             <div class="input-wrapper">
                                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <input type="text" id="usernameInput" class="form-input" placeholder="Masukkan ID pengguna" required autocomplete="username">
+                                <input type="text" id="usernameInputNonAdmin" class="form-input" placeholder="Masukkan ID pengguna" autocomplete="username">
                             </div>
                         </div>
 
-                        <!-- Password input -->
                         <div class="form-group">
-                            <label class="form-label" for="passwordInput">Kata Sandi</label>
+                            <label class="form-label" for="passwordInputNonAdmin">Kata Sandi</label>
                             <div class="input-wrapper">
                                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                                <input type="password" id="passwordInput" class="form-input" placeholder="Masukkan kata sandi" required autocomplete="current-password">
-                                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('passwordInput', 'eyeIconOpen', 'eyeIconClosed')" aria-label="Lihat kata sandi">
-                                    <svg id="eyeIconOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                    <svg id="eyeIconClosed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
-                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                                    </svg>
-                                </button>
+                                <input type="password" id="passwordInputNonAdmin" class="form-input" placeholder="Masukkan kata sandi" autocomplete="current-password">
                             </div>
                         </div>
 
-                        <!-- Helper row -->
                         <div class="form-helper-row">
                             <label class="remember-checkbox-label">
-                                <input type="checkbox" id="rememberMeCheckbox" checked>
+                                <input type="checkbox" id="rememberMeCheckboxNonAdmin" checked>
                                 <span>Ingat saya</span>
                             </label>
                             <a href="javascript:void(0)" class="forgot-link" onclick="navigateView('forgot')">Lupa Password?</a>
                         </div>
 
-                        <!-- Submit button -->
-                        <button type="submit" class="submit-btn" id="loginSubmitBtn">
-                            <span id="submitBtnText">Masuk ke SI-AKAD</span>
-                            <svg id="submitBtnArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
+                        <button type="button" class="submit-btn" id="loginSubmitBtnNonAdmin" onclick="submitNonAdminLogin()">
+                            <span id="submitBtnTextNonAdmin">Masuk ke SI-AKAD</span>
                         </button>
 
-                        <div class="auth-divider">atau masuk dengan</div>
+                        <div class="auth-divider" style="margin-top: 14px;">atau masuk dengan</div>
 
-                        <!-- Google OAuth Button: selalu redirect ke Google resmi -->
                         @if(!empty($googleConfigured))
-                        <a href="{{ route('google.redirect') }}" class="btn-google-login" style="text-decoration: none;" id="btnGoogleOAuth">
-                            <svg class="google-g-logo" viewBox="0 0 24 24">
+                        <a href="{{ route('google.redirect') }}" class="btn-google-login" style="text-decoration: none; margin-top: 0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -1487,9 +2524,8 @@
                             <span>Masuk dengan Akun Google</span>
                         </a>
                         @else
-                        {{-- Google belum dikonfigurasi: tampil tombol disable + petunjuk --}}
-                        <button type="button" class="btn-google-login" disabled style="opacity:0.55; cursor:not-allowed;" title="Google OAuth belum dikonfigurasi di server">
-                            <svg class="google-g-logo" viewBox="0 0 24 24">
+                        <button type="button" class="btn-google-login" disabled style="opacity:0.55; cursor:not-allowed;">
+                            <svg width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -1503,11 +2539,562 @@
                         </div>
                         @endif
 
-                        <!-- Demo Auto-Fill helper -->
-                        <button type="button" class="demo-fill-btn" onclick="fillDemoCredentials()">
+                        <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentials()">
                             <span>⚡ Klik untuk Isi Kredensial Demo Cepat</span>
                         </button>
-                    </form>
+                    </div>
+
+                    <!-- ============================================ -->
+                    <!-- ADMIN LOGIN SECTION (TAMPILAN BARU SESUAI GAMBAR) -->
+                    <!-- ============================================ -->
+                    <div id="adminLoginSection" style="display:none;">
+
+                        <!-- Back button -->
+                        <button type="button" class="admin-back-nav" onclick="navigateView('roles')">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Kembali ke halaman utama
+                        </button>
+
+                        <!-- Logo + Brand -->
+                        <div class="brand-header" style="margin-bottom: 24px; cursor: default;">
+                            <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 4L63 20H37L50 4Z" fill="#D99B16"/>
+                                <path d="M50 14L59 27H41L50 14Z" fill="#F5C036"/>
+                                <circle cx="50" cy="22" r="3.5" fill="#D99B16"/>
+                                <path d="M12 30C12 30 25 38 50 38C75 38 88 30 88 30C88 30 92 68 50 94C8 68 12 30 12 30Z" fill="#0C2548"/>
+                                <path d="M22 40C22 40 32 44 47 45V78C32 77 22 72 22 72V40Z" fill="#FFFFFF"/>
+                                <path d="M25 43C25 43 33 46 45 47V75C33 74 25 70 25 70V43Z" fill="#143B6F"/>
+                                <path d="M78 40C78 40 68 44 53 45V78C68 77 78 72 78 72V40Z" fill="#FFFFFF"/>
+                                <path d="M75 43C75 43 67 46 55 47V75C67 74 75 70 75 70V43Z" fill="#143B6F"/>
+                                <circle cx="50" cy="51" r="3.5" fill="#F5C036"/>
+                                <path d="M48 57H52V69H48V57Z" fill="#F5C036"/>
+                                <path d="M47 70H53V72H47V70Z" fill="#F5C036"/>
+                                <path d="M30 76C36 78 44 79 50 79C56 79 64 78 70 76C62 82 50 86 50 86C50 86 38 82 30 76Z" fill="#D99B16"/>
+                            </svg>
+                            <div class="brand-text-col">
+                                <span style="font-size: 22px; font-weight: 800; color: #0C2548; letter-spacing: -0.3px;">SI-AKAD</span>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #1e5fae;">Sistem Informasi Akademik</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b;">Institut Informatika &amp; Komputer</span>
+                            </div>
+                        </div>
+
+                        <!-- Title + subtitle -->
+                        <h2 class="admin-login-title">Login Admin</h2>
+                        <p class="admin-login-subtitle">Masuk dengan akun admin untuk mengelola<br>seluruh sistem akademik</p>
+
+                        <!-- Admin Login Form -->
+                        <form id="authLoginForm" onsubmit="handleApiLoginSubmit(event)">
+                            <input type="hidden" id="selectedRoleInput" name="role" value="admin">
+
+                            <!-- Username/NIP -->
+                            <div class="admin-input-wrapper">
+                                <svg class="admin-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="usernameInput" class="admin-form-input" placeholder="Username/NIP" required autocomplete="username">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="admin-input-wrapper">
+                                <svg class="admin-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="passwordInput" class="admin-form-input" placeholder="Password" required autocomplete="current-password">
+                                <button type="button" class="admin-toggle-pass" onclick="togglePasswordVisibility('passwordInput', 'eyeIconOpen', 'eyeIconClosed')" aria-label="Lihat kata sandi">
+                                    <svg id="eyeIconOpen" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg id="eyeIconClosed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="admin-login-btn" id="loginSubmitBtn">
+                                <span id="submitBtnText">Login</span>
+                                <svg id="submitBtnArrow" width="0" height="0" style="display:none;"></svg>
+                            </button>
+
+                            <!-- Google Login -->
+                            @if(!empty($googleConfigured))
+                            <a href="{{ route('google.redirect') }}" class="admin-google-btn" id="btnGoogleOAuth">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </a>
+                            @else
+                            <button type="button" class="admin-google-btn" disabled style="opacity:0.55; cursor:not-allowed;">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </button>
+                            @endif
+
+                            <!-- Lupa Password -->
+                            <button type="button" class="admin-forgot-link" onclick="navigateView('forgot')">Lupa Password?</button>
+
+                            <!-- Demo Fill -->
+                            <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentials()">
+                                <span>⚡ Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ============================================ -->
+                    <!-- MAHASISWA LOGIN SECTION (TAMPILAN BARU SESUAI GAMBAR) -->
+                    <!-- ============================================ -->
+                    <div id="mahasiswaLoginSection" style="display:none;">
+
+                        <!-- Back button -->
+                        <button type="button" class="mahasiswa-back-nav" onclick="navigateView('roles')">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Kembali ke halaman utama
+                        </button>
+
+                        <!-- Logo + Brand -->
+                        <div class="brand-header" style="margin-bottom: 24px; cursor: default;">
+                            <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 4L63 20H37L50 4Z" fill="#D99B16"/>
+                                <path d="M50 14L59 27H41L50 14Z" fill="#F5C036"/>
+                                <circle cx="50" cy="22" r="3.5" fill="#D99B16"/>
+                                <path d="M12 30C12 30 25 38 50 38C75 38 88 30 88 30C88 30 92 68 50 94C8 68 12 30 12 30Z" fill="#0C2548"/>
+                                <path d="M22 40C22 40 32 44 47 45V78C32 77 22 72 22 72V40Z" fill="#FFFFFF"/>
+                                <path d="M25 43C25 43 33 46 45 47V75C33 74 25 70 25 70V43Z" fill="#143B6F"/>
+                                <path d="M78 40C78 40 68 44 53 45V78C68 77 78 72 78 72V40Z" fill="#FFFFFF"/>
+                                <path d="M75 43C75 43 67 46 55 47V75C67 74 75 70 75 70V43Z" fill="#143B6F"/>
+                                <circle cx="50" cy="51" r="3.5" fill="#F5C036"/>
+                                <path d="M48 57H52V69H48V57Z" fill="#F5C036"/>
+                                <path d="M47 70H53V72H47V70Z" fill="#F5C036"/>
+                                <path d="M30 76C36 78 44 79 50 79C56 79 64 78 70 76C62 82 50 86 50 86C50 86 38 82 30 76Z" fill="#D99B16"/>
+                            </svg>
+                            <div class="brand-text-col">
+                                <span style="font-size: 22px; font-weight: 800; color: #0C2548; letter-spacing: -0.3px;">SI-AKAD</span>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #166534;">Sistem Informasi Akademik</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b;">Institut Informatika &amp; Komputer</span>
+                            </div>
+                        </div>
+
+                        <!-- Title + subtitle -->
+                        <h2 class="mahasiswa-login-title">Login Mahasiswa</h2>
+                        <p class="mahasiswa-login-subtitle">Masuk dengan akun mahasiswa untuk mengakses<br>seluruh layanan akademik</p>
+
+                        <!-- Mahasiswa Login Form -->
+                        <form id="authLoginFormMahasiswa" onsubmit="handleMahasiswaLoginSubmit(event)">
+                            <input type="hidden" id="selectedRoleInputMahasiswa" name="role" value="mahasiswa">
+
+                            <!-- Username/NPM -->
+                            <div class="mahasiswa-input-wrapper">
+                                <svg class="mahasiswa-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="usernameInputMahasiswa" class="mahasiswa-form-input" placeholder="Username/NPM" required autocomplete="username">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mahasiswa-input-wrapper">
+                                <svg class="mahasiswa-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="passwordInputMahasiswa" class="mahasiswa-form-input" placeholder="Password" required autocomplete="current-password">
+                                <button type="button" class="mahasiswa-toggle-pass" onclick="togglePasswordVisibility('passwordInputMahasiswa', 'eyeIconOpenMhs', 'eyeIconClosedMhs')" aria-label="Lihat kata sandi">
+                                    <svg id="eyeIconOpenMhs" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg id="eyeIconClosedMhs" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="mahasiswa-login-btn" id="loginSubmitBtnMhs">
+                                <span id="submitBtnTextMhs">Login</span>
+                            </button>
+
+                            <!-- Google Login -->
+                            @if(!empty($googleConfigured))
+                            <a href="{{ route('google.redirect') }}" class="mahasiswa-google-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </a>
+                            @else
+                            <button type="button" class="mahasiswa-google-btn" disabled style="opacity:0.55; cursor:not-allowed;">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </button>
+                            @endif
+
+                            <!-- Lupa Password -->
+                            <button type="button" class="mahasiswa-forgot-link" onclick="navigateView('forgot')">Lupa Password?</button>
+
+                            <!-- Demo Fill -->
+                            <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsMhs()">
+                                <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ============================================ -->
+                    <!-- DOSEN PENGAJAR LOGIN SECTION (TAMPILAN BARU) -->
+                    <!-- ============================================ -->
+                    <div id="dosenPengajarLoginSection" style="display:none;">
+
+                        <!-- Back button -->
+                        <button type="button" class="dosen-back-nav" onclick="navigateView('roles')">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Kembali ke halaman utama
+                        </button>
+
+                        <!-- Logo + Brand -->
+                        <div class="brand-header" style="margin-bottom: 24px; cursor: default;">
+                            <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 4L63 20H37L50 4Z" fill="#D99B16"/>
+                                <path d="M50 14L59 27H41L50 14Z" fill="#F5C036"/>
+                                <circle cx="50" cy="22" r="3.5" fill="#D99B16"/>
+                                <path d="M12 30C12 30 25 38 50 38C75 38 88 30 88 30C88 30 92 68 50 94C8 68 12 30 12 30Z" fill="#0C2548"/>
+                                <path d="M22 40C22 40 32 44 47 45V78C32 77 22 72 22 72V40Z" fill="#FFFFFF"/>
+                                <path d="M25 43C25 43 33 46 45 47V75C33 74 25 70 25 70V43Z" fill="#143B6F"/>
+                                <path d="M78 40C78 40 68 44 53 45V78C68 77 78 72 78 72V40Z" fill="#FFFFFF"/>
+                                <path d="M75 43C75 43 67 46 55 47V75C67 74 75 70 75 70V43Z" fill="#143B6F"/>
+                                <circle cx="50" cy="51" r="3.5" fill="#F5C036"/>
+                                <path d="M48 57H52V69H48V57Z" fill="#F5C036"/>
+                                <path d="M47 70H53V72H47V70Z" fill="#F5C036"/>
+                                <path d="M30 76C36 78 44 79 50 79C56 79 64 78 70 76C62 82 50 86 50 86C50 86 38 82 30 76Z" fill="#D99B16"/>
+                            </svg>
+                            <div class="brand-text-col">
+                                <span style="font-size: 22px; font-weight: 800; color: #0C2548; letter-spacing: -0.3px;">SI-AKAD</span>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #6d28d9;">Sistem Informasi Akademik</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b;">Institut Informatika &amp; Komputer</span>
+                            </div>
+                        </div>
+
+                        <!-- Title + subtitle -->
+                        <h2 class="dosen-login-title">Login Dosen Pengajar</h2>
+                        <p class="dosen-login-subtitle">Masuk dengan akun dosen pengajar untuk<br>mengakses sistem akademik</p>
+
+                        <!-- Dosen Pengajar Login Form -->
+                        <form id="authLoginFormDosen" onsubmit="handleDosenLoginSubmit(event)">
+                            <input type="hidden" id="selectedRoleInputDosen" name="role" value="dosen_pengajar">
+
+                            <!-- Username/NIDN -->
+                            <div class="dosen-input-wrapper">
+                                <svg class="dosen-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="usernameInputDosen" class="dosen-form-input" placeholder="Username/NIDN" required autocomplete="username">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="dosen-input-wrapper">
+                                <svg class="dosen-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="passwordInputDosen" class="dosen-form-input" placeholder="Password" required autocomplete="current-password">
+                                <button type="button" class="dosen-toggle-pass" onclick="togglePasswordVisibility('passwordInputDosen', 'eyeIconOpenDosen', 'eyeIconClosedDosen')" aria-label="Lihat kata sandi">
+                                    <svg id="eyeIconOpenDosen" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg id="eyeIconClosedDosen" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="dosen-login-btn" id="loginSubmitBtnDosen">
+                                <span id="submitBtnTextDosen">Login</span>
+                            </button>
+
+                            <!-- Google Login -->
+                            @if(!empty($googleConfigured))
+                            <a href="{{ route('google.redirect') }}" class="dosen-google-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </a>
+                            @else
+                            <button type="button" class="dosen-google-btn" disabled style="opacity:0.55; cursor:not-allowed;">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </button>
+                            @endif
+
+                            <!-- Lupa Password -->
+                            <button type="button" class="dosen-forgot-link" onclick="navigateView('forgot')">Lupa Password?</button>
+
+                            <!-- Demo Fill -->
+                            <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsDosen()">
+                                <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ============================================ -->
+                    <!-- DOSEN WALI LOGIN SECTION (TAMPILAN BARU)    -->
+                    <!-- ============================================ -->
+                    <div id="dosenWaliLoginSection" style="display:none;">
+
+                        <!-- Back button -->
+                        <button type="button" class="dosen-wali-back-nav" onclick="navigateView('roles')">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Kembali ke halaman utama
+                        </button>
+
+                        <!-- Logo + Brand -->
+                        <div class="brand-header" style="margin-bottom: 24px; cursor: default;">
+                            <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 4L63 20H37L50 4Z" fill="#D99B16"/>
+                                <path d="M50 14L59 27H41L50 14Z" fill="#F5C036"/>
+                                <circle cx="50" cy="22" r="3.5" fill="#D99B16"/>
+                                <path d="M12 30C12 30 25 38 50 38C75 38 88 30 88 30C88 30 92 68 50 94C8 68 12 30 12 30Z" fill="#0C2548"/>
+                                <path d="M22 40C22 40 32 44 47 45V78C32 77 22 72 22 72V40Z" fill="#FFFFFF"/>
+                                <path d="M25 43C25 43 33 46 45 47V75C33 74 25 70 25 70V43Z" fill="#143B6F"/>
+                                <path d="M78 40C78 40 68 44 53 45V78C68 77 78 72 78 72V40Z" fill="#FFFFFF"/>
+                                <path d="M75 43C75 43 67 46 55 47V75C67 74 75 70 75 70V43Z" fill="#143B6F"/>
+                                <circle cx="50" cy="51" r="3.5" fill="#F5C036"/>
+                                <path d="M48 57H52V69H48V57Z" fill="#F5C036"/>
+                                <path d="M47 70H53V72H47V70Z" fill="#F5C036"/>
+                                <path d="M30 76C36 78 44 79 50 79C56 79 64 78 70 76C62 82 50 86 50 86C50 86 38 82 30 76Z" fill="#D99B16"/>
+                            </svg>
+                            <div class="brand-text-col">
+                                <span style="font-size: 22px; font-weight: 800; color: #0C2548; letter-spacing: -0.3px;">SI-AKAD</span>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #92400e;">Sistem Informasi Akademik</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b;">Institut Informatika &amp; Komputer</span>
+                            </div>
+                        </div>
+
+                        <!-- Title + subtitle -->
+                        <h2 class="dosen-wali-login-title">Login Dosen Wali</h2>
+                        <p class="dosen-wali-login-subtitle">Masuk dengan akun dosen wali untuk mengakses<br>layanan bimbingan akademik dan konseling.</p>
+
+                        <!-- Dosen Wali Login Form -->
+                        <form id="authLoginFormDosenWali" onsubmit="handleDosenWaliLoginSubmit(event)">
+                            <input type="hidden" id="selectedRoleInputDosenWali" name="role" value="dosen_wali">
+
+                            <!-- Username/NIDN -->
+                            <div class="dosen-wali-input-wrapper">
+                                <svg class="dosen-wali-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="usernameInputDosenWali" class="dosen-wali-form-input" placeholder="username/Nidn" required autocomplete="username">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="dosen-wali-input-wrapper">
+                                <svg class="dosen-wali-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="passwordInputDosenWali" class="dosen-wali-form-input" placeholder="Password" required autocomplete="current-password">
+                                <button type="button" class="dosen-wali-toggle-pass" onclick="togglePasswordVisibility('passwordInputDosenWali', 'eyeIconOpenDosenWali', 'eyeIconClosedDosenWali')" aria-label="Lihat kata sandi">
+                                    <svg id="eyeIconOpenDosenWali" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg id="eyeIconClosedDosenWali" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="dosen-wali-login-btn" id="loginSubmitBtnDosenWali">
+                                <span id="submitBtnTextDosenWali">Login</span>
+                            </button>
+
+                            <!-- Google Login -->
+                            @if(!empty($googleConfigured))
+                            <a href="{{ route('google.redirect') }}" class="dosen-wali-google-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </a>
+                            @else
+                            <button type="button" class="dosen-wali-google-btn" disabled style="opacity:0.55; cursor:not-allowed;">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </button>
+                            @endif
+
+                            <!-- Lupa Password -->
+                            <button type="button" class="dosen-wali-forgot-link" onclick="navigateView('forgot')">Lupa Password?</button>
+
+                            <!-- Demo Fill -->
+                            <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsDosenWali()">
+                                <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ============================================ -->
+                    <!-- BENDAHARA LOGIN SECTION (TAMPILAN BARU)     -->
+                    <!-- ============================================ -->
+                    <div id="bendaharaLoginSection" style="display:none;">
+
+                        <!-- Back button -->
+                        <button type="button" class="bendahara-back-nav" onclick="navigateView('roles')">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Kembali ke halaman utama
+                        </button>
+
+                        <!-- Logo + Brand -->
+                        <div class="brand-header" style="margin-bottom: 24px; cursor: default;">
+                            <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 4L63 20H37L50 4Z" fill="#D99B16"/>
+                                <path d="M50 14L59 27H41L50 14Z" fill="#F5C036"/>
+                                <circle cx="50" cy="22" r="3.5" fill="#D99B16"/>
+                                <path d="M12 30C12 30 25 38 50 38C75 38 88 30 88 30C88 30 92 68 50 94C8 68 12 30 12 30Z" fill="#0C2548"/>
+                                <path d="M22 40C22 40 32 44 47 45V78C32 77 22 72 22 72V40Z" fill="#FFFFFF"/>
+                                <path d="M25 43C25 43 33 46 45 47V75C33 74 25 70 25 70V43Z" fill="#143B6F"/>
+                                <path d="M78 40C78 40 68 44 53 45V78C68 77 78 72 78 72V40Z" fill="#FFFFFF"/>
+                                <path d="M75 43C75 43 67 46 55 47V75C67 74 75 70 75 70V43Z" fill="#143B6F"/>
+                                <circle cx="50" cy="51" r="3.5" fill="#F5C036"/>
+                                <path d="M48 57H52V69H48V57Z" fill="#F5C036"/>
+                                <path d="M47 70H53V72H47V70Z" fill="#F5C036"/>
+                                <path d="M30 76C36 78 44 79 50 79C56 79 64 78 70 76C62 82 50 86 50 86C50 86 38 82 30 76Z" fill="#D99B16"/>
+                            </svg>
+                            <div class="brand-text-col">
+                                <span style="font-size: 22px; font-weight: 800; color: #0C2548; letter-spacing: -0.3px;">SI-AKAD</span>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #d97706;">Sistem Informasi Akademik</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b;">Institut Informatika &amp; Komputer</span>
+                            </div>
+                        </div>
+
+                        <!-- Title + subtitle -->
+                        <h2 class="bendahara-login-title">Login Bendahara</h2>
+                        <p class="bendahara-login-subtitle">Masuk dengan akun bendahara untuk mengelola<br>transaksi keuangan</p>
+
+                        <!-- Bendahara Login Form -->
+                        <form id="authLoginFormBendahara" onsubmit="handleBendaharaLoginSubmit(event)">
+                            <input type="hidden" id="selectedRoleInputBendahara" name="role" value="bendahara">
+
+                            <!-- Username/NIP -->
+                            <div class="bendahara-input-wrapper">
+                                <svg class="bendahara-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="usernameInputBendahara" class="bendahara-form-input" placeholder="Username/NIP" required autocomplete="username">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="bendahara-input-wrapper">
+                                <svg class="bendahara-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="passwordInputBendahara" class="bendahara-form-input" placeholder="Password" required autocomplete="current-password">
+                                <button type="button" class="bendahara-toggle-pass" onclick="togglePasswordVisibility('passwordInputBendahara', 'eyeIconOpenBendahara', 'eyeIconClosedBendahara')" aria-label="Lihat kata sandi">
+                                    <svg id="eyeIconOpenBendahara" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg id="eyeIconClosedBendahara" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="bendahara-login-btn" id="loginSubmitBtnBendahara">
+                                <span id="submitBtnTextBendahara">Login</span>
+                            </button>
+
+                            <!-- Google Login -->
+                            @if(!empty($googleConfigured))
+                            <a href="{{ route('google.redirect') }}" class="bendahara-google-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </a>
+                            @else
+                            <button type="button" class="bendahara-google-btn" disabled style="opacity:0.55; cursor:not-allowed;">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                </svg>
+                                <span>Login With Google</span>
+                            </button>
+                            @endif
+
+                            <!-- Lupa Password -->
+                            <button type="button" class="bendahara-forgot-link" onclick="navigateView('forgot')">Lupa Password?</button>
+
+                            <!-- Demo Fill -->
+                            <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsBendahara()">
+                                <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
 
                 <!-- SUB-VIEW 3: LUPA PASSWORD VIEW (MATCHES SCREENSHOT 2) -->
@@ -1606,7 +3193,7 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL: CAMPUS ARCHITECTURE (DEFAULT FOR ROLES & LOGIN) -->
+        <!-- RIGHT PANEL: CAMPUS ARCHITECTURE (DEFAULT FOR ROLES) -->
         <div class="right-panel" id="mainRightPanel">
             <div class="right-content">
                 <div class="hero-badge">SI-AKAD</div>
@@ -1637,7 +3224,586 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL: SECURITY ILLUSTRATION (MATCHES SCREENSHOT 2 FOR LUPA PASSWORD) -->
+        <!-- RIGHT PANEL: ADMIN LOGIN - SERVER + SHIELD ILLUSTRATION -->
+        <div class="right-panel-admin-login" id="adminRightPanel">
+            <div class="admin-right-content">
+                <!-- Server + Shield SVG Illustration matching reference image -->
+                <svg viewBox="0 0 420 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:380px; position:relative; z-index:2;">
+
+                    <!-- Watermark "SI" text -->
+                    <text x="30" y="200" font-family="'Plus Jakarta Sans', sans-serif" font-size="130" font-weight="900"
+                          fill="rgba(255,255,255,0.04)" letter-spacing="-5">SI</text>
+                    <text x="50" y="340" font-family="'Plus Jakarta Sans', sans-serif" font-size="130" font-weight="900"
+                          fill="rgba(255,255,255,0.04)" letter-spacing="-5">SI</text>
+
+                    <!-- SERVER UNIT 1 (top) -->
+                    <rect x="60" y="40" width="200" height="55" rx="8" fill="#1e3a7a" stroke="rgba(150,180,255,0.25)" stroke-width="1.5"/>
+                    <circle cx="88" cy="67" r="5.5" fill="#4ade80"/>
+                    <circle cx="106" cy="67" r="5.5" fill="#facc15"/>
+                    <circle cx="124" cy="67" r="5.5" fill="#f87171" opacity="0.6"/>
+                    <rect x="148" y="60" width="80" height="6" rx="3" fill="rgba(180,200,255,0.18)"/>
+                    <rect x="148" y="72" width="55" height="5" rx="2.5" fill="rgba(180,200,255,0.12)"/>
+                    <!-- Vent lines -->
+                    <line x1="240" y1="52" x2="240" y2="82" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="245" y1="52" x2="245" y2="82" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="250" y1="52" x2="250" y2="82" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+
+                    <!-- SERVER UNIT 2 (middle) -->
+                    <rect x="60" y="112" width="200" height="55" rx="8" fill="#1e3a7a" stroke="rgba(150,180,255,0.25)" stroke-width="1.5"/>
+                    <circle cx="88" cy="139" r="5.5" fill="#4ade80"/>
+                    <circle cx="106" cy="139" r="5.5" fill="#facc15"/>
+                    <rect x="130" y="132" width="95" height="6" rx="3" fill="rgba(180,200,255,0.18)"/>
+                    <rect x="130" y="144" width="65" height="5" rx="2.5" fill="rgba(180,200,255,0.12)"/>
+                    <line x1="240" y1="124" x2="240" y2="154" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="245" y1="124" x2="245" y2="154" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="250" y1="124" x2="250" y2="154" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+
+                    <!-- SERVER UNIT 3 (bottom) -->
+                    <rect x="60" y="184" width="200" height="55" rx="8" fill="#1e3a7a" stroke="rgba(150,180,255,0.25)" stroke-width="1.5"/>
+                    <circle cx="88" cy="211" r="5.5" fill="#4ade80"/>
+                    <circle cx="106" cy="211" r="5.5" fill="#f87171" opacity="0.6"/>
+                    <rect x="130" y="204" width="75" height="6" rx="3" fill="rgba(180,200,255,0.18)"/>
+                    <rect x="130" y="216" width="50" height="5" rx="2.5" fill="rgba(180,200,255,0.12)"/>
+                    <line x1="240" y1="196" x2="240" y2="226" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="245" y1="196" x2="245" y2="226" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+                    <line x1="250" y1="196" x2="250" y2="226" stroke="rgba(180,200,255,0.15)" stroke-width="1"/>
+
+                    <!-- Server base / stand -->
+                    <rect x="130" y="239" width="60" height="20" rx="4" fill="#1a3370" stroke="rgba(150,180,255,0.2)" stroke-width="1"/>
+                    <rect x="100" y="258" width="120" height="10" rx="3" fill="#172d62"/>
+
+                    <!-- Cable from server to ground -->
+                    <path d="M160 268 Q160 300 200 310" stroke="rgba(100,150,255,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <circle cx="200" cy="312" r="5" fill="rgba(100,150,255,0.35)"/>
+
+                    <!-- SHIELD (right side, overlapping server) -->
+                    <path d="M270 80 L370 80 L370 210 Q370 280 320 310 Q270 280 270 210 Z"
+                          fill="#1e4fab" stroke="rgba(150,190,255,0.3)" stroke-width="2"/>
+                    <!-- Shield inner highlight -->
+                    <path d="M285 100 L355 100 L355 205 Q355 260 320 285 Q285 260 285 205 Z"
+                          fill="rgba(30,80,180,0.5)" />
+                    <!-- Shield center emblem: lock icon -->
+                    <rect x="303" y="175" width="34" height="28" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <path d="M310 175 L310 165 Q310 152 320 152 Q330 152 330 165 L330 175" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <circle cx="320" cy="187" r="4" fill="rgba(255,255,255,0.6)"/>
+                    <rect x="318" y="190" width="4" height="7" rx="1" fill="rgba(255,255,255,0.6)"/>
+
+                    <!-- Connecting dots (decorative) -->
+                    <circle cx="62" cy="290" r="4" fill="rgba(100,160,255,0.4)"/>
+                    <circle cx="80" cy="310" r="3" fill="rgba(100,160,255,0.3)"/>
+                    <circle cx="50" cy="320" r="2.5" fill="rgba(100,160,255,0.25)"/>
+                    <!-- horizontal line from server bottom -->
+                    <line x1="60" y1="290" x2="200" y2="290" stroke="rgba(80,130,220,0.2)" stroke-width="2"/>
+
+                </svg>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: MAHASISWA LOGIN - EDUCATION NETWORK ILLUSTRATION -->
+        <div class="right-panel-mahasiswa-login" id="mahasiswaRightPanel">
+            <div class="mahasiswa-right-content">
+                <!-- Education Network SVG Illustration matching reference image -->
+                <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:380px; position:relative; z-index:2;">
+
+                    <!-- Watermark "SI-AKAD" text -->
+                    <text x="210" y="240" font-family="'Plus Jakarta Sans', sans-serif" font-size="54" font-weight="900"
+                          fill="rgba(255,255,255,0.05)" text-anchor="middle" letter-spacing="2">SI-AKAD</text>
+
+                    <!-- ===== NETWORK CONNECTION LINES ===== -->
+                    <!-- Center to top-left hexagon -->
+                    <line x1="210" y1="210" x2="110" y2="115" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Center to top-right (book circle) -->
+                    <line x1="210" y1="210" x2="325" y2="110" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Center to right (graduation cap) -->
+                    <line x1="210" y1="210" x2="345" y2="265" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Center to bottom-right (globe) -->
+                    <line x1="210" y1="210" x2="310" y2="340" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Center to bottom-left (circle) -->
+                    <line x1="210" y1="210" x2="105" y2="305" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Center to left (small circle) -->
+                    <line x1="210" y1="210" x2="70" y2="215" stroke="rgba(134,239,172,0.35)" stroke-width="1.8"/>
+                    <!-- Extra branch lines -->
+                    <line x1="110" y1="115" x2="60" y2="80" stroke="rgba(134,239,172,0.2)" stroke-width="1.2"/>
+                    <line x1="325" y1="110" x2="375" y2="75" stroke="rgba(134,239,172,0.2)" stroke-width="1.2"/>
+                    <line x1="345" y1="265" x2="395" y2="250" stroke="rgba(134,239,172,0.2)" stroke-width="1.2"/>
+
+                    <!-- ===== NODE DOTS on lines ===== -->
+                    <circle cx="160" cy="162" r="4" fill="rgba(134,239,172,0.5)"/>
+                    <circle cx="267" cy="158" r="3.5" fill="rgba(134,239,172,0.5)"/>
+                    <circle cx="158" cy="257" r="3.5" fill="rgba(134,239,172,0.5)"/>
+                    <circle cx="260" cy="275" r="3" fill="rgba(134,239,172,0.4)"/>
+
+                    <!-- ===== CENTER: LARGE CIRCLE WITH OPEN BOOK ===== -->
+                    <circle cx="210" cy="210" r="52" fill="#1a5c38" stroke="rgba(134,239,172,0.4)" stroke-width="2"/>
+                    <!-- Open book icon -->
+                    <g transform="translate(185, 192)">
+                        <!-- Left page -->
+                        <path d="M25 8 Q13 8 5 12 L5 38 Q13 34 25 34 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+                        <!-- Right page -->
+                        <path d="M25 8 Q37 8 45 12 L45 38 Q37 34 25 34 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+                        <!-- Spine -->
+                        <line x1="25" y1="8" x2="25" y2="34" stroke="rgba(134,239,172,0.6)" stroke-width="1.5"/>
+                        <!-- Lines on left page -->
+                        <line x1="10" y1="18" x2="22" y2="16" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                        <line x1="10" y1="23" x2="22" y2="21" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                        <line x1="10" y1="28" x2="22" y2="26" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                        <!-- Lines on right page -->
+                        <line x1="28" y1="16" x2="40" y2="18" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                        <line x1="28" y1="21" x2="40" y2="23" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                        <line x1="28" y1="26" x2="40" y2="28" stroke="rgba(22,101,52,0.4)" stroke-width="1.2"/>
+                    </g>
+
+                    <!-- ===== TOP-LEFT: HEXAGON ===== -->
+                    <polygon points="110,80 132,68 154,80 154,104 132,116 110,104"
+                             fill="#1d6b42" stroke="rgba(134,239,172,0.45)" stroke-width="2"/>
+                    <!-- Small square inside hexagon -->
+                    <rect x="122" y="82" width="20" height="20" rx="3" fill="rgba(255,255,255,0.15)" stroke="rgba(134,239,172,0.4)" stroke-width="1.5"/>
+                    <!-- Extra tiny decorative square near hexagon -->
+                    <rect x="75" y="58" width="12" height="12" rx="2" fill="rgba(134,239,172,0.2)" stroke="rgba(134,239,172,0.3)" stroke-width="1"/>
+
+                    <!-- ===== TOP-RIGHT: CIRCLE WITH BOOK (smaller) ===== -->
+                    <circle cx="325" cy="100" r="38" fill="#1d6b42" stroke="rgba(134,239,172,0.45)" stroke-width="2"/>
+                    <!-- Book icon small -->
+                    <g transform="translate(307, 85)">
+                        <path d="M18 5 Q10 5 4 8 L4 28 Q10 26 18 26 Z" fill="rgba(255,255,255,0.85)"/>
+                        <path d="M18 5 Q26 5 32 8 L32 28 Q26 26 18 26 Z" fill="rgba(255,255,255,0.85)"/>
+                        <line x1="18" y1="5" x2="18" y2="26" stroke="rgba(134,239,172,0.6)" stroke-width="1.2"/>
+                    </g>
+                    <!-- Decorative square near top-right -->
+                    <rect x="370" y="62" width="14" height="14" rx="2" fill="rgba(134,239,172,0.2)" stroke="rgba(134,239,172,0.3)" stroke-width="1"/>
+
+                    <!-- ===== RIGHT: CIRCLE WITH GRADUATION CAP ===== -->
+                    <circle cx="355" cy="268" r="36" fill="#1d6b42" stroke="rgba(134,239,172,0.45)" stroke-width="2"/>
+                    <!-- Graduation cap icon -->
+                    <g transform="translate(335, 252)">
+                        <!-- Board -->
+                        <ellipse cx="20" cy="10" rx="20" ry="5" fill="rgba(255,255,255,0.85)"/>
+                        <!-- Cap top -->
+                        <rect x="12" y="10" width="16" height="12" rx="2" fill="rgba(255,255,255,0.85)"/>
+                        <!-- Tassel -->
+                        <line x1="36" y1="10" x2="40" y2="20" stroke="rgba(134,239,172,0.8)" stroke-width="1.5"/>
+                        <circle cx="40" cy="21" r="2" fill="rgba(134,239,172,0.8)"/>
+                    </g>
+
+                    <!-- ===== BOTTOM-RIGHT: CIRCLE WITH GLOBE ===== -->
+                    <circle cx="310" cy="345" r="34" fill="#1d6b42" stroke="rgba(134,239,172,0.45)" stroke-width="2"/>
+                    <!-- Globe icon -->
+                    <g transform="translate(290, 325)">
+                        <circle cx="20" cy="20" r="16" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="none"/>
+                        <!-- Latitude lines -->
+                        <ellipse cx="20" cy="20" rx="8" ry="16" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
+                        <line x1="4" y1="20" x2="36" y2="20" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+                        <line x1="6" y1="13" x2="34" y2="13" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                        <line x1="6" y1="27" x2="34" y2="27" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                    </g>
+
+                    <!-- ===== BOTTOM-LEFT: EMPTY CIRCLE (decorative) ===== -->
+                    <circle cx="105" cy="310" r="30" fill="none" stroke="rgba(134,239,172,0.4)" stroke-width="2"/>
+                    <circle cx="105" cy="310" r="18" fill="rgba(29,107,66,0.5)" stroke="rgba(134,239,172,0.3)" stroke-width="1.5"/>
+
+                    <!-- ===== LEFT: SMALL FILLED CIRCLE ===== -->
+                    <circle cx="68" cy="215" r="16" fill="#1d6b42" stroke="rgba(134,239,172,0.45)" stroke-width="2"/>
+                    <circle cx="68" cy="215" r="7" fill="rgba(255,255,255,0.2)"/>
+
+                    <!-- ===== SMALL DECORATIVE DOTS ===== -->
+                    <circle cx="145" cy="70" r="5" fill="rgba(134,239,172,0.3)"/>
+                    <circle cx="390" cy="150" r="5" fill="rgba(134,239,172,0.3)"/>
+                    <circle cx="55" cy="160" r="4" fill="rgba(134,239,172,0.25)"/>
+                    <circle cx="370" cy="370" r="4" fill="rgba(134,239,172,0.25)"/>
+
+                </svg>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: DOSEN PENGAJAR LOGIN - TEACHING ILLUSTRATION -->
+        <div class="right-panel-dosen-login" id="dosenPengajarRightPanel">
+            <div class="dosen-right-content">
+                <svg viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:400px; position:relative; z-index:2;">
+
+                    <!-- Watermark "SI-AKAD" text -->
+                    <text x="220" y="245" font-family="'Plus Jakarta Sans', sans-serif" font-size="50" font-weight="900"
+                          fill="rgba(255,255,255,0.06)" text-anchor="middle" letter-spacing="2">SI-AKAD</text>
+
+                    <!-- ===== OPEN BOOK (bottom-left) ===== -->
+                    <g transform="translate(20, 270)">
+                        <!-- Left page -->
+                        <path d="M60 10 Q40 5 10 8 L10 80 Q40 77 60 82 Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)" stroke-linejoin="round"/>
+                        <!-- Right page -->
+                        <path d="M60 10 Q80 5 110 8 L110 80 Q80 77 60 82 Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)" stroke-linejoin="round"/>
+                        <!-- Spine -->
+                        <line x1="60" y1="10" x2="60" y2="82" stroke="#d4af7a" stroke-width="2.5"/>
+                        <!-- Lines on pages -->
+                        <line x1="18" y1="28" x2="54" y2="26" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="18" y1="38" x2="54" y2="36" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="18" y1="48" x2="54" y2="46" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="18" y1="58" x2="54" y2="56" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="66" y1="26" x2="102" y2="28" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="66" y1="36" x2="102" y2="38" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="66" y1="46" x2="102" y2="48" stroke="#d4af7a" stroke-width="1.5" opacity="0.6"/>
+                    </g>
+
+                    <!-- ===== WHITEBOARD WITH CHART (top-left) ===== -->
+                    <g transform="translate(30, 30)">
+                        <!-- Board frame -->
+                        <rect x="0" y="15" width="130" height="90" rx="4" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.06)"/>
+                        <!-- Board stand legs -->
+                        <line x1="65" y1="105" x2="50" y2="125" stroke="#d4af7a" stroke-width="2"/>
+                        <line x1="65" y1="105" x2="80" y2="125" stroke="#d4af7a" stroke-width="2"/>
+                        <!-- Top bar -->
+                        <rect x="0" y="10" width="130" height="8" rx="2" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.12)"/>
+                        <!-- Chart line going up -->
+                        <polyline points="15,85 35,70 55,75 75,50 95,55 115,30" stroke="#f5d78e" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                        <!-- Chart axes -->
+                        <line x1="12" y1="25" x2="12" y2="90" stroke="#d4af7a" stroke-width="1.5" opacity="0.7"/>
+                        <line x1="12" y1="90" x2="118" y2="90" stroke="#d4af7a" stroke-width="1.5" opacity="0.7"/>
+                        <!-- Arrow on chart line -->
+                        <polygon points="113,26 120,32 107,32" fill="#f5d78e" opacity="0.9"/>
+                    </g>
+
+                    <!-- ===== LAPTOP / MONITOR (top-right) ===== -->
+                    <g transform="translate(265, 20)">
+                        <!-- Monitor frame -->
+                        <rect x="0" y="0" width="140" height="95" rx="6" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.06)"/>
+                        <!-- Screen bezel -->
+                        <rect x="8" y="8" width="124" height="74" rx="3" stroke="#d4af7a" stroke-width="1" fill="rgba(212,175,122,0.04)" opacity="0.7"/>
+                        <!-- Monitor stand -->
+                        <line x1="70" y1="95" x2="70" y2="115" stroke="#d4af7a" stroke-width="2.5"/>
+                        <line x1="50" y1="115" x2="90" y2="115" stroke="#d4af7a" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Math formula A + x^2 on screen -->
+                        <text x="25" y="52" font-family="serif" font-size="28" font-weight="bold" fill="#f5d78e" opacity="0.9">A+x</text>
+                        <text x="99" y="40" font-family="serif" font-size="16" font-weight="bold" fill="#f5d78e" opacity="0.9">2</text>
+                    </g>
+
+                    <!-- ===== DOSEN FIGURE AT PODIUM (center) ===== -->
+                    <g transform="translate(165, 140)">
+                        <!-- Podium -->
+                        <path d="M10 95 L50 60 L90 95 L95 130 L5 130 Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)" stroke-linejoin="round"/>
+                        <!-- Podium top surface -->
+                        <rect x="30" y="56" width="40" height="8" rx="2" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Body / suit -->
+                        <path d="M50 5 L50 55" stroke="#d4af7a" stroke-width="1" fill="none" opacity="0.3"/>
+                        <!-- Torso -->
+                        <path d="M35 30 L35 58 L50 52 L65 58 L65 30 Q58 22 50 20 Q42 22 35 30Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Suit lapels -->
+                        <path d="M50 25 L42 38" stroke="#d4af7a" stroke-width="1.5" opacity="0.8"/>
+                        <path d="M50 25 L58 38" stroke="#d4af7a" stroke-width="1.5" opacity="0.8"/>
+                        <!-- Tie -->
+                        <path d="M50 28 L48 45 L50 48 L52 45 Z" stroke="#f5d78e" stroke-width="1" fill="rgba(245,215,142,0.2)"/>
+                        <!-- Head -->
+                        <circle cx="50" cy="10" r="12" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Arms -->
+                        <path d="M35 35 L18 48" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M65 35 L82 44" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Pointer (right hand) -->
+                        <line x1="82" y1="44" x2="100" y2="36" stroke="#d4af7a" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="100" cy="35" r="2.5" fill="#f5d78e"/>
+                    </g>
+
+                    <!-- ===== OPEN BOOK (top-center) ===== -->
+                    <g transform="translate(175, 30)">
+                        <path d="M40 5 Q25 3 5 6 L5 55 Q25 52 40 56 Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <path d="M40 5 Q55 3 75 6 L75 55 Q55 52 40 56 Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <line x1="40" y1="5" x2="40" y2="56" stroke="#d4af7a" stroke-width="2"/>
+                        <line x1="10" y1="18" x2="36" y2="16" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="10" y1="26" x2="36" y2="24" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="10" y1="34" x2="36" y2="32" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="44" y1="16" x2="70" y2="18" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="44" y1="24" x2="70" y2="26" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                        <line x1="44" y1="32" x2="70" y2="34" stroke="#d4af7a" stroke-width="1.2" opacity="0.5"/>
+                    </g>
+
+                    <!-- ===== GRADUATION CAP (bottom-right) ===== -->
+                    <g transform="translate(310, 290)">
+                        <ellipse cx="50" cy="20" rx="50" ry="12" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <rect x="30" y="20" width="40" height="30" rx="3" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <!-- Tassel -->
+                        <line x1="95" y1="20" x2="100" y2="48" stroke="#d4af7a" stroke-width="2"/>
+                        <path d="M98 48 L100 58 L102 48" stroke="#d4af7a" stroke-width="1.5" fill="none"/>
+                        <circle cx="100" cy="60" r="3" fill="#f5d78e"/>
+                    </g>
+
+                    <!-- ===== MOLECULE NETWORK (bottom-right corner) ===== -->
+                    <g transform="translate(340, 330)">
+                        <circle cx="20" cy="20" r="7" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.1)"/>
+                        <circle cx="50" cy="10" r="5" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.1)"/>
+                        <circle cx="55" cy="40" r="6" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.1)"/>
+                        <circle cx="80" cy="25" r="4" stroke="#f5d78e" stroke-width="1.5" fill="rgba(245,215,142,0.15)"/>
+                        <line x1="27" y1="20" x2="45" y2="12" stroke="#d4af7a" stroke-width="1.2"/>
+                        <line x1="26" y1="24" x2="49" y2="37" stroke="#d4af7a" stroke-width="1.2"/>
+                        <line x1="55" y1="15" x2="76" y2="23" stroke="#d4af7a" stroke-width="1.2"/>
+                        <line x1="61" y1="38" x2="77" y2="28" stroke="#d4af7a" stroke-width="1.2"/>
+                    </g>
+
+                    <!-- Connecting line from whiteboard to dosen -->
+                    <line x1="160" y1="100" x2="210" y2="155" stroke="#d4af7a" stroke-width="1" opacity="0.3" stroke-dasharray="4 4"/>
+                    <!-- Connecting line from monitor to dosen -->
+                    <line x1="280" y1="120" x2="240" y2="155" stroke="#d4af7a" stroke-width="1" opacity="0.3" stroke-dasharray="4 4"/>
+
+                </svg>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: DOSEN WALI LOGIN - ACADEMIC COUNSELING ILLUSTRATION -->
+        <div class="right-panel-dosen-wali" id="dosenWaliRightPanel">
+            <div class="dosen-wali-right-content">
+                <svg viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:400px; position:relative; z-index:2;">
+
+                    <!-- Watermark "SI-AKAD" -->
+                    <text x="220" y="255" font-family="'Plus Jakarta Sans', sans-serif" font-size="52" font-weight="900"
+                          fill="rgba(255,255,255,0.06)" text-anchor="middle" letter-spacing="2">SI-AKAD</text>
+
+                    <!-- ===== LARGE OUTER CIRCLE (counseling context) ===== -->
+                    <circle cx="220" cy="210" r="165" stroke="rgba(220,180,120,0.25)" stroke-width="1.5" fill="none" stroke-dasharray="6 5"/>
+                    <circle cx="220" cy="210" r="140" stroke="rgba(220,180,120,0.18)" stroke-width="1" fill="none"/>
+
+                    <!-- ===== PERSON 1 (Dosen Wali - left, sitting) ===== -->
+                    <g transform="translate(95, 175)">
+                        <!-- Chair -->
+                        <rect x="5" y="65" width="55" height="5" rx="2" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <line x1="10" y1="70" x2="10" y2="95" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="55" y1="70" x2="55" y2="95" stroke="#d4af7a" stroke-width="1.5"/>
+                        <rect x="0" y="38" width="8" height="35" rx="3" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <!-- Body -->
+                        <path d="M20 38 L20 65 L45 65 L45 38 Q38 28 32 26 Q26 28 20 38Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Lapels -->
+                        <path d="M32 30 L26 42" stroke="#d4af7a" stroke-width="1.5" opacity="0.8"/>
+                        <path d="M32 30 L38 42" stroke="#d4af7a" stroke-width="1.5" opacity="0.8"/>
+                        <!-- Head -->
+                        <circle cx="32" cy="14" r="13" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Arms - extended forward for handshake -->
+                        <path d="M45 42 L68 55" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Legs/seated -->
+                        <path d="M22 65 L18 90" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M43 65 L47 90" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- ===== PERSON 2 (Mahasiswa - right, sitting) ===== -->
+                    <g transform="translate(270, 175)">
+                        <!-- Chair -->
+                        <rect x="10" y="65" width="55" height="5" rx="2" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <line x1="15" y1="70" x2="15" y2="95" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="60" y1="70" x2="60" y2="95" stroke="#d4af7a" stroke-width="1.5"/>
+                        <rect x="62" y="38" width="8" height="35" rx="3" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <!-- Body -->
+                        <path d="M20 38 L20 65 L45 65 L45 38 Q38 28 32 26 Q26 28 20 38Z" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Head -->
+                        <circle cx="32" cy="14" r="13" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.1)"/>
+                        <!-- Hair (female style indicator) -->
+                        <path d="M20 10 Q19 2 32 1 Q45 2 44 10" stroke="#d4af7a" stroke-width="1.5" fill="none"/>
+                        <!-- Arms - extended for handshake -->
+                        <path d="M20 42 L-4 55" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Legs/seated -->
+                        <path d="M22 65 L18 90" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M43 65 L47 90" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- ===== CENTER HANDSHAKE ===== -->
+                    <g transform="translate(195, 225)">
+                        <!-- Left hand -->
+                        <path d="M0 10 L18 0 L22 5 L8 15Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.15)"/>
+                        <!-- Right hand -->
+                        <path d="M50 10 L32 0 L28 5 L42 15Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.15)"/>
+                        <!-- Clasped hands -->
+                        <ellipse cx="25" cy="10" rx="12" ry="8" stroke="#f5d78e" stroke-width="2" fill="rgba(245,215,142,0.1)"/>
+                    </g>
+
+                    <!-- ===== TOP CENTER: OPEN BOOK IN SPEECH BUBBLE ===== -->
+                    <g transform="translate(168, 30)">
+                        <!-- Speech bubble -->
+                        <rect x="0" y="0" width="104" height="72" rx="12" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <!-- Bubble tail -->
+                        <path d="M45 72 L38 90 L60 72Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <!-- Open book inside -->
+                        <path d="M32 20 Q24 18 16 21 L16 52 Q24 49 32 52 Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <path d="M32 20 Q40 18 52 21 L52 52 Q40 49 32 52 Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.08)"/>
+                        <line x1="32" y1="20" x2="32" y2="52" stroke="#d4af7a" stroke-width="1.5"/>
+                        <!-- Book lines -->
+                        <line x1="18" y1="29" x2="30" y2="27" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <line x1="18" y1="35" x2="30" y2="33" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <line x1="18" y1="41" x2="30" y2="39" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <line x1="34" y1="27" x2="50" y2="29" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <line x1="34" y1="33" x2="50" y2="35" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <line x1="34" y1="39" x2="50" y2="41" stroke="#d4af7a" stroke-width="1" opacity="0.6"/>
+                        <!-- Chat dots -->
+                        <circle cx="72" cy="15" r="3" fill="#f5d78e" opacity="0.7"/>
+                        <circle cx="82" cy="15" r="3" fill="#f5d78e" opacity="0.7"/>
+                        <circle cx="92" cy="15" r="3" fill="#f5d78e" opacity="0.7"/>
+                    </g>
+
+                    <!-- ===== TOP LEFT: KEY ===== -->
+                    <g transform="translate(55, 55)">
+                        <!-- Key head (circle) -->
+                        <circle cx="20" cy="20" r="18" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <circle cx="20" cy="20" r="10" stroke="#d4af7a" stroke-width="1.5" fill="none"/>
+                        <!-- Key shaft -->
+                        <line x1="34" y1="32" x2="62" y2="60" stroke="#d4af7a" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Key teeth -->
+                        <line x1="50" y1="54" x2="44" y2="60" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="58" y1="62" x2="52" y2="68" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- ===== TOP RIGHT: HANDSHAKE ===== -->
+                    <g transform="translate(320, 60)">
+                        <!-- Left arm -->
+                        <path d="M0 20 L35 5" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Right arm -->
+                        <path d="M75 20 L40 5" stroke="#d4af7a" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Clasped hands center -->
+                        <ellipse cx="37" cy="5" rx="14" ry="9" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.12)"/>
+                        <!-- Wrist lines -->
+                        <line x1="26" y1="10" x2="22" y2="20" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="48" y1="10" x2="52" y2="20" stroke="#d4af7a" stroke-width="1.5"/>
+                    </g>
+
+                    <!-- ===== BOTTOM CENTER: COMPASS ===== -->
+                    <g transform="translate(185, 335)">
+                        <!-- Compass outer ring -->
+                        <circle cx="35" cy="35" r="32" stroke="#d4af7a" stroke-width="2" fill="rgba(212,175,122,0.08)"/>
+                        <circle cx="35" cy="35" r="24" stroke="#d4af7a" stroke-width="1" fill="none" opacity="0.5"/>
+                        <!-- Compass needle N -->
+                        <path d="M35 12 L30 35 L35 30 L40 35 Z" stroke="#f5d78e" stroke-width="1.5" fill="rgba(245,215,142,0.3)"/>
+                        <!-- Compass needle S -->
+                        <path d="M35 58 L30 35 L35 40 L40 35 Z" stroke="#d4af7a" stroke-width="1.5" fill="rgba(212,175,122,0.2)"/>
+                        <!-- Center dot -->
+                        <circle cx="35" cy="35" r="3" fill="#f5d78e"/>
+                        <!-- Cardinal points ticks -->
+                        <line x1="35" y1="5" x2="35" y2="10" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="35" y1="60" x2="35" y2="65" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="5" y1="35" x2="10" y2="35" stroke="#d4af7a" stroke-width="1.5"/>
+                        <line x1="60" y1="35" x2="65" y2="35" stroke="#d4af7a" stroke-width="1.5"/>
+                    </g>
+
+                    <!-- Decorative dots -->
+                    <circle cx="155" cy="145" r="4" fill="rgba(212,175,122,0.4)"/>
+                    <circle cx="285" cy="145" r="4" fill="rgba(212,175,122,0.4)"/>
+                    <circle cx="100" cy="310" r="4" fill="rgba(212,175,122,0.3)"/>
+                    <circle cx="340" cy="310" r="4" fill="rgba(212,175,122,0.3)"/>
+
+                </svg>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: BENDAHARA LOGIN - FINANCE ILLUSTRATION -->
+        <div class="right-panel-bendahara" id="bendaharaRightPanel">
+            <div class="bendahara-right-content">
+                <svg viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:400px; position:relative; z-index:2;">
+
+                    <!-- Watermark "SI-AKAD" -->
+                    <text x="220" y="255" font-family="'Plus Jakarta Sans', sans-serif" font-size="50" font-weight="900"
+                          fill="rgba(100,50,0,0.12)" text-anchor="middle" letter-spacing="2">SI-AKAD</text>
+
+                    <!-- Circuit/connection lines background -->
+                    <line x1="155" y1="80" x2="200" y2="80" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="240" y1="80" x2="290" y2="80" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="290" y1="80" x2="290" y2="130" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="155" y1="80" x2="155" y2="290" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="155" y1="290" x2="200" y2="290" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="245" y1="290" x2="290" y2="290" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="290" y1="290" x2="290" y2="220" stroke="rgba(100,50,0,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <!-- Circuit dots -->
+                    <circle cx="155" cy="185" r="5" fill="rgba(100,50,0,0.25)"/>
+                    <circle cx="290" cy="185" r="5" fill="rgba(100,50,0,0.25)"/>
+                    <circle cx="220" cy="80" r="5" fill="rgba(100,50,0,0.25)"/>
+                    <circle cx="220" cy="290" r="5" fill="rgba(100,50,0,0.25)"/>
+
+                    <!-- ===== CALCULATOR (top-left) ===== -->
+                    <g transform="translate(60, 40)">
+                        <!-- Body -->
+                        <rect x="0" y="0" width="100" height="130" rx="8" stroke="rgba(80,40,0,0.8)" stroke-width="2.5" fill="rgba(255,255,255,0.08)"/>
+                        <!-- Display -->
+                        <rect x="8" y="8" width="84" height="28" rx="4" stroke="rgba(80,40,0,0.6)" stroke-width="1.5" fill="rgba(255,255,255,0.12)"/>
+                        <!-- Display line -->
+                        <line x1="60" y1="22" x2="86" y2="22" stroke="rgba(80,40,0,0.6)" stroke-width="1.5"/>
+                        <!-- Button grid 3x4 -->
+                        <!-- Row 1 -->
+                        <rect x="10" y="44" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="39" y="44" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="68" y="44" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <!-- Row 2 -->
+                        <rect x="10" y="66" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="39" y="66" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="68" y="66" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <!-- Row 3 -->
+                        <rect x="10" y="88" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="39" y="88" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="68" y="88" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <!-- Row 4 -->
+                        <rect x="10" y="110" width="22" height="16" rx="3" stroke="rgba(80,40,0,0.5)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="39" y="110" width="51" height="16" rx="3" stroke="rgba(80,40,0,0.65)" stroke-width="2" fill="rgba(255,255,255,0.12)"/>
+                    </g>
+
+                    <!-- ===== SHIELD WITH CHECKMARK (top-right) ===== -->
+                    <g transform="translate(270, 35)">
+                        <!-- Shield body -->
+                        <path d="M55 5 L100 20 L100 60 C100 88 55 105 55 105 C55 105 10 88 10 60 L10 20 Z"
+                              stroke="rgba(80,40,0,0.8)" stroke-width="2.5" fill="rgba(255,255,255,0.08)" stroke-linejoin="round"/>
+                        <!-- Checkmark -->
+                        <polyline points="30,58 47,75 82,38" stroke="rgba(80,40,0,0.9)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </g>
+
+                    <!-- ===== PLUS SIGNS (connectors) ===== -->
+                    <g transform="translate(205, 158)">
+                        <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(80,40,0,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="0" y1="12" x2="24" y2="12" stroke="rgba(80,40,0,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                    <g transform="translate(205, 255)">
+                        <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(80,40,0,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="0" y1="12" x2="24" y2="12" stroke="rgba(80,40,0,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- ===== COIN STACK WITH $ (bottom-left) ===== -->
+                    <g transform="translate(65, 220)">
+                        <!-- Stack coins -->
+                        <ellipse cx="50" cy="120" rx="45" ry="12" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.08)"/>
+                        <rect x="5" y="100" width="90" height="20" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.08)"/>
+                        <ellipse cx="50" cy="100" rx="45" ry="12" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.1)"/>
+                        <rect x="5" y="80" width="90" height="20" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.08)"/>
+                        <ellipse cx="50" cy="80" rx="45" ry="12" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.1)"/>
+                        <rect x="5" y="60" width="90" height="20" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.08)"/>
+                        <ellipse cx="50" cy="60" rx="45" ry="12" stroke="rgba(80,40,0,0.8)" stroke-width="2.5" fill="rgba(255,255,255,0.12)"/>
+                        <!-- Dollar sign -->
+                        <text x="35" y="68" font-family="serif" font-size="22" font-weight="bold" fill="rgba(80,40,0,0.8)">$</text>
+                    </g>
+
+                    <!-- ===== Rp COIN (bottom-center) ===== -->
+                    <g transform="translate(175, 290)">
+                        <circle cx="45" cy="45" r="42" stroke="rgba(80,40,0,0.8)" stroke-width="2.5" fill="rgba(255,255,255,0.1)"/>
+                        <circle cx="45" cy="45" r="34" stroke="rgba(80,40,0,0.4)" stroke-width="1" fill="none"/>
+                        <text x="19" y="54" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800" fill="rgba(80,40,0,0.85)">Rp</text>
+                    </g>
+
+                    <!-- ===== OPEN BOOK WITH PENCIL (bottom-right) ===== -->
+                    <g transform="translate(278, 218)">
+                        <!-- Book body -->
+                        <rect x="0" y="0" width="110" height="140" rx="6" stroke="rgba(80,40,0,0.7)" stroke-width="2" fill="rgba(255,255,255,0.08)"/>
+                        <!-- Spine -->
+                        <line x1="55" y1="0" x2="55" y2="140" stroke="rgba(80,40,0,0.5)" stroke-width="1.5"/>
+                        <!-- Left page lines -->
+                        <line x1="8" y1="20" x2="48" y2="20" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="30" x2="48" y2="30" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="40" x2="48" y2="40" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="50" x2="48" y2="50" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="60" x2="48" y2="60" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="70" x2="48" y2="70" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="8" y1="80" x2="48" y2="80" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <!-- Right page lines -->
+                        <line x1="62" y1="20" x2="102" y2="20" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="62" y1="30" x2="102" y2="30" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="62" y1="40" x2="102" y2="40" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="62" y1="50" x2="102" y2="50" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <line x1="62" y1="60" x2="102" y2="60" stroke="rgba(80,40,0,0.45)" stroke-width="1.2"/>
+                        <!-- Pencil on top of book -->
+                        <g transform="translate(60, -35) rotate(35)">
+                            <rect x="0" y="0" width="12" height="70" rx="2" stroke="rgba(80,40,0,0.75)" stroke-width="1.5" fill="rgba(255,255,255,0.1)"/>
+                            <polygon points="0,70 12,70 6,85" stroke="rgba(80,40,0,0.75)" stroke-width="1.5" fill="rgba(255,255,255,0.08)"/>
+                            <rect x="0" y="0" width="12" height="10" rx="2" stroke="rgba(80,40,0,0.5)" stroke-width="1" fill="rgba(255,255,255,0.15)"/>
+                        </g>
+                    </g>
+
+                </svg>
+            </div>
+        </div>
+
         <div class="right-panel-security" id="securityRightPanel">
             <!-- Custom Vector Illustration Matching Screenshot 2 -->
             <svg class="security-illustration-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1823,6 +3989,12 @@
             const mainLeft = document.getElementById('mainLeftPanel');
             const mainRight = document.getElementById('mainRightPanel');
             const securityRight = document.getElementById('securityRightPanel');
+            const adminRight = document.getElementById('adminRightPanel');
+            const mahasiswaRight = document.getElementById('mahasiswaRightPanel');
+            const dosenRight = document.getElementById('dosenPengajarRightPanel');
+            const dosenWaliRight = document.getElementById('dosenWaliRightPanel');
+            const bendaharaRight = document.getElementById('bendaharaRightPanel');
+            const sharedBrand = document.getElementById('sharedBrandHeader');
 
             const viewRoles = document.getElementById('viewRoleSelection');
             const viewLogin = document.getElementById('viewLoginForm');
@@ -1835,19 +4007,115 @@
                 mainLeft.style.display = 'flex';
                 mainRight.style.display = 'flex';
                 securityRight.style.display = 'none';
+                adminRight.style.display = 'none';
+                mahasiswaRight.style.display = 'none';
+                dosenRight.style.display = 'none';
+                dosenWaliRight.style.display = 'none';
+                bendaharaRight.style.display = 'none';
+                sharedBrand.style.display = 'flex';
                 viewRoles.classList.add('active');
             } else if (viewName === 'login') {
                 mainLeft.style.display = 'flex';
-                mainRight.style.display = 'flex';
                 securityRight.style.display = 'none';
+
+                if (currentRoleKey === 'admin') {
+                    mainRight.style.display = 'none';
+                    adminRight.style.display = 'flex';
+                    mahasiswaRight.style.display = 'none';
+                    dosenRight.style.display = 'none';
+                    dosenWaliRight.style.display = 'none';
+                    bendaharaRight.style.display = 'none';
+                    document.getElementById('adminLoginSection').style.display = 'block';
+                    document.getElementById('nonAdminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'none';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'none';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'none';
+                    document.getElementById('bendaharaLoginSection').style.display = 'none';
+                    sharedBrand.style.display = 'none';
+                } else if (currentRoleKey === 'mahasiswa') {
+                    mainRight.style.display = 'none';
+                    adminRight.style.display = 'none';
+                    mahasiswaRight.style.display = 'flex';
+                    dosenRight.style.display = 'none';
+                    dosenWaliRight.style.display = 'none';
+                    bendaharaRight.style.display = 'none';
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('nonAdminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'block';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'none';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'none';
+                    document.getElementById('bendaharaLoginSection').style.display = 'none';
+                    sharedBrand.style.display = 'none';
+                } else if (currentRoleKey === 'dosen_pengajar') {
+                    mainRight.style.display = 'none';
+                    adminRight.style.display = 'none';
+                    mahasiswaRight.style.display = 'none';
+                    dosenRight.style.display = 'flex';
+                    dosenWaliRight.style.display = 'none';
+                    bendaharaRight.style.display = 'none';
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('nonAdminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'none';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'block';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'none';
+                    document.getElementById('bendaharaLoginSection').style.display = 'none';
+                    sharedBrand.style.display = 'none';
+                } else if (currentRoleKey === 'dosen_wali') {
+                    mainRight.style.display = 'none';
+                    adminRight.style.display = 'none';
+                    mahasiswaRight.style.display = 'none';
+                    dosenRight.style.display = 'none';
+                    dosenWaliRight.style.display = 'flex';
+                    bendaharaRight.style.display = 'none';
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('nonAdminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'none';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'none';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'block';
+                    document.getElementById('bendaharaLoginSection').style.display = 'none';
+                    sharedBrand.style.display = 'none';
+                } else if (currentRoleKey === 'bendahara') {
+                    mainRight.style.display = 'none';
+                    adminRight.style.display = 'none';
+                    mahasiswaRight.style.display = 'none';
+                    dosenRight.style.display = 'none';
+                    dosenWaliRight.style.display = 'none';
+                    bendaharaRight.style.display = 'flex';
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('nonAdminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'none';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'none';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'none';
+                    document.getElementById('bendaharaLoginSection').style.display = 'block';
+                    sharedBrand.style.display = 'none';
+                } else {
+                    mainRight.style.display = 'flex';
+                    adminRight.style.display = 'none';
+                    mahasiswaRight.style.display = 'none';
+                    dosenRight.style.display = 'none';
+                    dosenWaliRight.style.display = 'none';
+                    bendaharaRight.style.display = 'none';
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('mahasiswaLoginSection').style.display = 'none';
+                    document.getElementById('dosenPengajarLoginSection').style.display = 'none';
+                    document.getElementById('dosenWaliLoginSection').style.display = 'none';
+                    document.getElementById('bendaharaLoginSection').style.display = 'none';
+                    document.getElementById('nonAdminLoginSection').style.display = 'block';
+                    sharedBrand.style.display = 'flex';
+                }
+
                 viewLogin.classList.add('active');
             } else if (viewName === 'forgot') {
                 mainLeft.style.display = 'flex';
                 mainRight.style.display = 'none';
                 securityRight.style.display = 'flex';
+                adminRight.style.display = 'none';
+                mahasiswaRight.style.display = 'none';
+                dosenRight.style.display = 'none';
+                dosenWaliRight.style.display = 'none';
+                sharedBrand.style.display = 'flex';
                 viewForgot.classList.add('active');
 
-                // Reset forgot steps to step A
                 document.getElementById('forgotStepEmail').style.display = 'block';
                 document.getElementById('forgotStepOtp').style.display = 'none';
                 document.getElementById('forgotStepNewPass').style.display = 'none';
@@ -1860,29 +4128,94 @@
             if (!config) return;
 
             currentRoleKey = roleKey;
-            const badge = document.getElementById('activeRoleBadge');
-            const badgeTitle = document.getElementById('badgeRoleTitle');
-            const label = document.getElementById('usernameLabel');
-            const input = document.getElementById('usernameInput');
-            const passInput = document.getElementById('passwordInput');
-            const roleInput = document.getElementById('selectedRoleInput');
-            const headerTitle = document.getElementById('formHeaderTitle');
-            const headerDesc = document.getElementById('formHeaderDesc');
 
-            badge.style.backgroundColor = config.bg;
-            badge.style.color = config.textColor;
-            badgeTitle.textContent = 'Role: ' + config.name;
+            if (roleKey === 'admin') {
+                const roleInput = document.getElementById('selectedRoleInput');
+                const input = document.getElementById('usernameInput');
+                const passInput = document.getElementById('passwordInput');
+                if (roleInput) roleInput.value = 'admin';
+                if (input) input.value = '';
+                if (passInput) passInput.value = '';
+                navigateView('login');
+                if (input) input.focus();
+            } else if (roleKey === 'mahasiswa') {
+                const input = document.getElementById('usernameInputMahasiswa');
+                const passInput = document.getElementById('passwordInputMahasiswa');
+                const roleInput = document.getElementById('selectedRoleInputMahasiswa');
+                if (roleInput) roleInput.value = 'mahasiswa';
+                if (input) input.value = '';
+                if (passInput) passInput.value = '';
+                navigateView('login');
+                if (input) input.focus();
+            } else if (roleKey === 'dosen_pengajar') {
+                const input = document.getElementById('usernameInputDosen');
+                const passInput = document.getElementById('passwordInputDosen');
+                const roleInput = document.getElementById('selectedRoleInputDosen');
+                if (roleInput) roleInput.value = 'dosen_pengajar';
+                if (input) input.value = '';
+                if (passInput) passInput.value = '';
+                navigateView('login');
+                if (input) input.focus();
+            } else if (roleKey === 'dosen_wali') {
+                const input = document.getElementById('usernameInputDosenWali');
+                const passInput = document.getElementById('passwordInputDosenWali');
+                const roleInput = document.getElementById('selectedRoleInputDosenWali');
+                if (roleInput) roleInput.value = 'dosen_wali';
+                if (input) input.value = '';
+                if (passInput) passInput.value = '';
+                navigateView('login');
+                if (input) input.focus();
+            } else if (roleKey === 'bendahara') {
+                const input = document.getElementById('usernameInputBendahara');
+                const passInput = document.getElementById('passwordInputBendahara');
+                const roleInput = document.getElementById('selectedRoleInputBendahara');
+                if (roleInput) roleInput.value = 'bendahara';
+                if (input) input.value = '';
+                if (passInput) passInput.value = '';
+                navigateView('login');
+                if (input) input.focus();
+            } else {
+                const badge = document.getElementById('activeRoleBadge');
+                const badgeTitle = document.getElementById('badgeRoleTitle');
+                const label = document.getElementById('usernameLabelNonAdmin');
+                const input = document.getElementById('usernameInputNonAdmin');
+                const passInput = document.getElementById('passwordInputNonAdmin');
+                const headerTitle = document.getElementById('formHeaderTitle');
+                const headerDesc = document.getElementById('formHeaderDesc');
 
-            label.textContent = config.label;
-            input.placeholder = config.placeholder;
-            input.value = '';
-            passInput.value = '';
-            roleInput.value = roleKey;
-            headerTitle.textContent = 'Masuk sebagai ' + config.name;
-            headerDesc.textContent = 'Silakan masukkan ' + config.label + ' dan kata sandi Anda';
+                badge.style.backgroundColor = config.bg;
+                badge.style.color = config.textColor;
+                badgeTitle.textContent = 'Role: ' + config.name;
 
-            navigateView('login');
-            input.focus();
+                label.textContent = config.label;
+                input.placeholder = config.placeholder;
+                input.value = '';
+                passInput.value = '';
+                headerTitle.textContent = 'Masuk sebagai ' + config.name;
+                headerDesc.textContent = 'Silakan masukkan ' + config.label + ' dan kata sandi Anda';
+
+                navigateView('login');
+                input.focus();
+            }
+        }
+
+        // Non-admin login submit
+        function submitNonAdminLogin() {
+            const username = document.getElementById('usernameInputNonAdmin').value.trim();
+            const password = document.getElementById('passwordInputNonAdmin').value.trim();
+            const remember = document.getElementById('rememberMeCheckboxNonAdmin').checked;
+
+            if (!username || !password) {
+                showToast('Mohon isi nomor identitas dan kata sandi!', true);
+                return;
+            }
+
+            // Inject values to main hidden inputs for shared API handler
+            document.getElementById('usernameInput').value = username;
+            document.getElementById('passwordInput').value = password;
+
+            const fakeEvent = { preventDefault: () => {} };
+            handleApiLoginSubmit(fakeEvent);
         }
 
         // Auto-fill demo credentials
@@ -1890,8 +4223,13 @@
             const config = ROLES_CONFIG[currentRoleKey];
             if (!config) return;
 
-            document.getElementById('usernameInput').value = config.demoUser;
-            document.getElementById('passwordInput').value = config.demoPass;
+            if (currentRoleKey === 'admin') {
+                document.getElementById('usernameInput').value = config.demoUser;
+                document.getElementById('passwordInput').value = config.demoPass;
+            } else {
+                document.getElementById('usernameInputNonAdmin').value = config.demoUser;
+                document.getElementById('passwordInputNonAdmin').value = config.demoPass;
+            }
 
             showToast('Kredensial demo diisi: ' + config.demoUser, false);
         }
