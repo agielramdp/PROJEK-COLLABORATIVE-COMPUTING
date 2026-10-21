@@ -50,12 +50,20 @@ class User extends Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->password_hash;
+        return (string) ($this->password_hash ?? $this->password ?? '');
     }
 
     public function getAuthPasswordName()
     {
         return 'password_hash';
+    }
+
+    /**
+     * Pastikan getRememberToken selalu mengembalikan string (mencegah TypeError hash_equals pada PHP 8.2+)
+     */
+    public function getRememberToken()
+    {
+        return (string) ($this->attributes[$this->getRememberTokenName()] ?? '');
     }
 
     /**

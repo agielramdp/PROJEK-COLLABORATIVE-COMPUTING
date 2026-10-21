@@ -2577,35 +2577,38 @@
                             <a href="javascript:void(0)" class="forgot-link" onclick="navigateView('forgot')">Lupa Password?</a>
                         </div>
 
-                        <!-- Lockout Banner (tampil saat terkunci) -->
-                        <div class="lockout-banner" id="lockoutBanner">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                            <div class="lockout-banner-text">
-                                <strong>Akun sementara dikunci</strong>
-                                Terlalu banyak percobaan login gagal. Silakan tunggu:
-                                <div class="lockout-timer" id="lockoutCountdown">05:00</div>
+                        <!-- Container Shared reCAPTCHA & Lockout (Berpindah otomatis ke form role aktif) -->
+                        <div id="recaptchaSharedWrapper" style="width: 100%; margin-bottom: 12px;">
+                            <!-- Lockout Banner (tampil saat terkunci) -->
+                            <div class="lockout-banner" id="lockoutBanner">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <div class="lockout-banner-text">
+                                    <strong>Akun sementara dikunci</strong>
+                                    Terlalu banyak percobaan login gagal. Silakan tunggu:
+                                    <div class="lockout-timer" id="lockoutCountdown">05:00</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Attempt Warning (tampil setelah percobaan gagal) -->
-                        <div class="attempt-warning" id="attemptWarning">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                                <line x1="12" y1="9" x2="12" y2="13"></line>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                            <span id="attemptWarningText">Percobaan ke-1 dari 3. Akun akan dikunci setelah 3 kali gagal.</span>
-                        </div>
+                            <!-- Attempt Warning (tampil setelah percobaan gagal) -->
+                            <div class="attempt-warning" id="attemptWarning">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <span id="attemptWarningText">Percobaan ke-1 dari 3. Akun akan dikunci setelah 3 kali gagal.</span>
+                            </div>
 
-                        <!-- reCAPTCHA v2 Widget -->
-                        <div class="recaptcha-wrapper">
-                            <div class="g-recaptcha"
-                                 id="recaptchaWidget"
-                                 data-sitekey="{{ config('services.recaptcha.site_key') }}"
-                                 data-theme="light">
+                            <!-- reCAPTCHA v2 Widget -->
+                            <div class="recaptcha-wrapper">
+                                <div class="g-recaptcha"
+                                     id="recaptchaWidget"
+                                     data-sitekey="{{ config('services.recaptcha.site_key') }}"
+                                     data-theme="light">
+                                </div>
                             </div>
                         </div>
 
@@ -4210,6 +4213,7 @@
                 }
 
                 viewLogin.classList.add('active');
+                setTimeout(attachRecaptchaToActiveForm, 10);
             } else if (viewName === 'forgot') {
                 mainLeft.style.display = 'flex';
                 mainRight.style.display = 'none';
@@ -4224,6 +4228,39 @@
                 document.getElementById('forgotStepEmail').style.display = 'block';
                 document.getElementById('forgotStepOtp').style.display = 'none';
                 document.getElementById('forgotStepNewPass').style.display = 'none';
+            }
+        }
+
+        // Pindahkan widget reCAPTCHA & Banner Lockout ke form role yang sedang aktif
+        function attachRecaptchaToActiveForm() {
+            const wrapper = document.getElementById('recaptchaSharedWrapper');
+            if (!wrapper) return;
+
+            let targetBtn = null;
+            let targetForm = null;
+
+            if (currentRoleKey === 'admin') {
+                targetBtn = document.getElementById('loginSubmitBtn');
+                targetForm = document.getElementById('authLoginForm');
+            } else if (currentRoleKey === 'mahasiswa') {
+                targetBtn = document.getElementById('loginSubmitBtnMhs');
+                targetForm = document.getElementById('authLoginFormMahasiswa');
+            } else if (currentRoleKey === 'dosen_pengajar') {
+                targetBtn = document.getElementById('loginSubmitBtnDosen');
+                targetForm = document.getElementById('authLoginFormDosen');
+            } else if (currentRoleKey === 'dosen_wali') {
+                targetBtn = document.getElementById('loginSubmitBtnDosenWali');
+                targetForm = document.getElementById('authLoginFormDosenWali');
+            } else if (currentRoleKey === 'bendahara') {
+                targetBtn = document.getElementById('loginSubmitBtnBendahara');
+                targetForm = document.getElementById('authLoginFormBendahara');
+            } else {
+                targetBtn = document.getElementById('loginSubmitBtnNonAdmin');
+                targetForm = document.getElementById('nonAdminLoginSection');
+            }
+
+            if (targetForm && targetBtn && wrapper.parentNode !== targetForm) {
+                targetForm.insertBefore(wrapper, targetBtn);
             }
         }
 
@@ -4308,19 +4345,7 @@
         function submitNonAdminLogin() {
             const username = document.getElementById('usernameInputNonAdmin').value.trim();
             const password = document.getElementById('passwordInputNonAdmin').value.trim();
-            const remember = document.getElementById('rememberMeCheckboxNonAdmin').checked;
-
-            if (!username || !password) {
-                showToast('Mohon isi nomor identitas dan kata sandi!', true);
-                return;
-            }
-
-            // Inject values to main hidden inputs for shared API handler
-            document.getElementById('usernameInput').value = username;
-            document.getElementById('passwordInput').value = password;
-
-            const fakeEvent = { preventDefault: () => {} };
-            handleApiLoginSubmit(fakeEvent);
+            executeRoleLogin(currentRoleKey, username, password, document.getElementById('loginSubmitBtnNonAdmin'), document.getElementById('submitBtnTextNonAdmin'), document.getElementById('submitBtnArrowNonAdmin'));
         }
 
         // Auto-fill demo credentials
@@ -4329,14 +4354,54 @@
             if (!config) return;
 
             if (currentRoleKey === 'admin') {
-                document.getElementById('usernameInput').value = config.demoUser;
-                document.getElementById('passwordInput').value = config.demoPass;
+                const u = document.getElementById('usernameInput');
+                const p = document.getElementById('passwordInput');
+                if (u) u.value = config.demoUser;
+                if (p) p.value = config.demoPass;
             } else {
-                document.getElementById('usernameInputNonAdmin').value = config.demoUser;
-                document.getElementById('passwordInputNonAdmin').value = config.demoPass;
+                const u = document.getElementById('usernameInputNonAdmin');
+                const p = document.getElementById('passwordInputNonAdmin');
+                if (u) u.value = config.demoUser;
+                if (p) p.value = config.demoPass;
             }
 
             showToast('Kredensial demo diisi: ' + config.demoUser, false);
+        }
+
+        function fillDemoCredentialsMhs() {
+            const config = ROLES_CONFIG['mahasiswa'];
+            if (config) {
+                document.getElementById('usernameInputMahasiswa').value = config.demoUser;
+                document.getElementById('passwordInputMahasiswa').value = config.demoPass;
+                showToast('Kredensial demo diisi: ' + config.demoUser, false);
+            }
+        }
+
+        function fillDemoCredentialsDosen() {
+            const config = ROLES_CONFIG['dosen_pengajar'];
+            if (config) {
+                document.getElementById('usernameInputDosen').value = config.demoUser;
+                document.getElementById('passwordInputDosen').value = config.demoPass;
+                showToast('Kredensial demo diisi: ' + config.demoUser, false);
+            }
+        }
+
+        function fillDemoCredentialsDosenWali() {
+            const config = ROLES_CONFIG['dosen_wali'];
+            if (config) {
+                document.getElementById('usernameInputDosenWali').value = config.demoUser;
+                document.getElementById('passwordInputDosenWali').value = config.demoPass;
+                showToast('Kredensial demo diisi: ' + config.demoUser, false);
+            }
+        }
+
+        function fillDemoCredentialsBendahara() {
+            const config = ROLES_CONFIG['bendahara'];
+            if (config) {
+                document.getElementById('usernameInputBendahara').value = config.demoUser;
+                document.getElementById('passwordInputBendahara').value = config.demoPass;
+                showToast('Kredensial demo diisi: ' + config.demoUser, false);
+            }
         }
 
         // Toggle Password Show/Hide
@@ -4345,14 +4410,16 @@
             const eyeOpen = document.getElementById(openIconId);
             const eyeClosed = document.getElementById(closedIconId);
 
+            if (!passInput) return;
+
             if (passInput.type === 'password') {
                 passInput.type = 'text';
-                eyeOpen.style.display = 'none';
-                eyeClosed.style.display = 'block';
+                if (eyeOpen) eyeOpen.style.display = 'none';
+                if (eyeClosed) eyeClosed.style.display = 'block';
             } else {
                 passInput.type = 'password';
-                eyeOpen.style.display = 'block';
-                eyeClosed.style.display = 'none';
+                if (eyeOpen) eyeOpen.style.display = 'block';
+                if (eyeClosed) eyeClosed.style.display = 'none';
             }
         }
 
@@ -4361,22 +4428,25 @@
         // ==========================================
         let lockoutInterval = null;
 
+        function getAllSubmitButtons() {
+            return document.querySelectorAll('.admin-login-btn, .mahasiswa-login-btn, .dosen-login-btn, .dosen-wali-login-btn, .bendahara-login-btn, .submit-btn');
+        }
+
         function startLockoutCountdown(seconds) {
             const banner = document.getElementById('lockoutBanner');
             const countdown = document.getElementById('lockoutCountdown');
-            const btn = document.getElementById('loginSubmitBtn');
             const attemptWarning = document.getElementById('attemptWarning');
 
-            banner.classList.add('active');
-            attemptWarning.classList.remove('active');
-            btn.disabled = true;
+            if (banner) banner.classList.add('active');
+            if (attemptWarning) attemptWarning.classList.remove('active');
+            getAllSubmitButtons().forEach(b => b.disabled = true);
 
             let remaining = seconds;
 
             function updateDisplay() {
                 const m = Math.floor(remaining / 60).toString().padStart(2, '0');
                 const s = (remaining % 60).toString().padStart(2, '0');
-                countdown.textContent = m + ':' + s;
+                if (countdown) countdown.textContent = m + ':' + s;
             }
 
             updateDisplay();
@@ -4387,9 +4457,8 @@
                 updateDisplay();
                 if (remaining <= 0) {
                     clearInterval(lockoutInterval);
-                    banner.classList.remove('active');
-                    btn.disabled = false;
-                    // Reset reCAPTCHA
+                    if (banner) banner.classList.remove('active');
+                    getAllSubmitButtons().forEach(b => b.disabled = false);
                     if (typeof grecaptcha !== 'undefined') {
                         grecaptcha.reset();
                     }
@@ -4401,6 +4470,8 @@
         function updateAttemptWarning(attempts, maxAttempts) {
             const warning = document.getElementById('attemptWarning');
             const text = document.getElementById('attemptWarningText');
+            if (!warning || !text) return;
+
             if (attempts > 0 && attempts < maxAttempts) {
                 warning.classList.add('active');
                 const remaining = maxAttempts - attempts;
@@ -4412,26 +4483,15 @@
         }
 
         // ==========================================
-        // API CALL: LOGIN DENGAN VALIDASI HASH
+        // UNIVERSAL API CALL: LOGIN (SEMUA ROLE)
         // ==========================================
-        async function handleApiLoginSubmit(event) {
-            event.preventDefault();
-            const username = document.getElementById('usernameInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            const role = document.getElementById('selectedRoleInput').value;
-            const rememberElem = document.getElementById('rememberMeCheckbox') || document.getElementById('rememberMeCheckboxNonAdmin');
-            const remember = rememberElem ? rememberElem.checked : false;
-
-            const btn = document.getElementById('loginSubmitBtn');
-            const btnText = document.getElementById('submitBtnText');
-            const btnArrow = document.getElementById('submitBtnArrow');
-
+        async function executeRoleLogin(role, username, password, btn, btnText, btnArrow) {
             if (!username || !password) {
                 showToast('Mohon isi nomor identitas dan kata sandi!', true);
                 return;
             }
 
-            // Ambil token reCAPTCHA
+            // Validasi reCAPTCHA
             let recaptchaToken = '';
             if (typeof grecaptcha !== 'undefined') {
                 recaptchaToken = grecaptcha.getResponse();
@@ -4441,9 +4501,10 @@
                 }
             }
 
-            btn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span> Memvalidasi kredensial...';
-            btnArrow.style.display = 'none';
+            const origText = btnText ? btnText.textContent : 'Login';
+            if (btn) btn.disabled = true;
+            if (btnText) btnText.innerHTML = '<span class="spinner"></span> Memvalidasi...';
+            if (btnArrow) btnArrow.style.display = 'none';
 
             try {
                 const response = await fetch('/api/login', {
@@ -4457,45 +4518,91 @@
                         username: username,
                         password: password,
                         role: role,
-                        remember: remember,
+                        remember: true,
                         'g-recaptcha-response': recaptchaToken
                     })
                 });
 
                 const data = await response.json();
 
-                btn.disabled = false;
-                btnText.textContent = 'Masuk ke SI-AKAD';
-                btnArrow.style.display = 'block';
+                if (btn) btn.disabled = false;
+                if (btnText) btnText.textContent = origText;
+                if (btnArrow) btnArrow.style.display = 'block';
 
-                // Reset reCAPTCHA setelah setiap attempt
+                // Reset reCAPTCHA setiap submit
                 if (typeof grecaptcha !== 'undefined') {
                     grecaptcha.reset();
                 }
 
                 if (response.ok && data.success) {
-                    // Login berhasil: reset semua warning
-                    document.getElementById('attemptWarning').classList.remove('active');
-                    document.getElementById('lockoutBanner').classList.remove('active');
+                    const warningElem = document.getElementById('attemptWarning');
+                    const lockoutElem = document.getElementById('lockoutBanner');
+                    if (warningElem) warningElem.classList.remove('active');
+                    if (lockoutElem) lockoutElem.classList.remove('active');
                     showSuccessModal(data.user);
                 } else if (response.status === 429) {
-                    // Rate limit / lockout aktif
                     const retryAfter = data.retry_after || 300;
                     startLockoutCountdown(retryAfter);
                     showToast(data.message || 'Terlalu banyak percobaan. Akun dikunci sementara.', true);
                 } else {
-                    // Login gagal biasa - tampilkan counter percobaan
                     if (data.attempts !== undefined) {
                         updateAttemptWarning(data.attempts, data.max_attempts || 3);
                     }
                     showToast(data.message || 'Login gagal. Periksa kembali data Anda.', true);
                 }
             } catch (err) {
-                btn.disabled = false;
-                btnText.textContent = 'Masuk ke SI-AKAD';
-                btnArrow.style.display = 'block';
+                if (btn) btn.disabled = false;
+                if (btnText) btnText.textContent = origText;
+                if (btnArrow) btnArrow.style.display = 'block';
                 showToast('Terjadi gangguan jaringan ke server API.', true);
             }
+        }
+
+        async function handleApiLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const role = (document.getElementById('selectedRoleInput') && document.getElementById('selectedRoleInput').value) || 'admin';
+            const btn = document.getElementById('loginSubmitBtn');
+            const btnText = document.getElementById('submitBtnText');
+            const btnArrow = document.getElementById('submitBtnArrow');
+            await executeRoleLogin(role, username, password, btn, btnText, btnArrow);
+        }
+
+        async function handleMahasiswaLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('usernameInputMahasiswa').value.trim();
+            const password = document.getElementById('passwordInputMahasiswa').value.trim();
+            const btn = document.getElementById('loginSubmitBtnMhs');
+            const btnText = document.getElementById('submitBtnTextMhs');
+            await executeRoleLogin('mahasiswa', username, password, btn, btnText, null);
+        }
+
+        async function handleDosenLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('usernameInputDosen').value.trim();
+            const password = document.getElementById('passwordInputDosen').value.trim();
+            const btn = document.getElementById('loginSubmitBtnDosen');
+            const btnText = document.getElementById('submitBtnTextDosen');
+            await executeRoleLogin('dosen_pengajar', username, password, btn, btnText, null);
+        }
+
+        async function handleDosenWaliLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('usernameInputDosenWali').value.trim();
+            const password = document.getElementById('passwordInputDosenWali').value.trim();
+            const btn = document.getElementById('loginSubmitBtnDosenWali');
+            const btnText = document.getElementById('submitBtnTextDosenWali');
+            await executeRoleLogin('dosen_wali', username, password, btn, btnText, null);
+        }
+
+        async function handleBendaharaLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('usernameInputBendahara').value.trim();
+            const password = document.getElementById('passwordInputBendahara').value.trim();
+            const btn = document.getElementById('loginSubmitBtnBendahara');
+            const btnText = document.getElementById('submitBtnTextBendahara');
+            await executeRoleLogin('bendahara', username, password, btn, btnText, null);
         }
 
         // Google OAuth: login dilakukan via redirect server-side (/auth/google/redirect)
