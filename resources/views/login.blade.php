@@ -11,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Google reCAPTCHA v2 Script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -2227,6 +2230,73 @@
             background: #991b1b;
         }
 
+        /* Lockout / Rate Limit Banner */
+        .lockout-banner {
+            display: none;
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            border: 1px solid #dc2626;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            color: #fecaca;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.5;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lockout-banner.active {
+            display: flex;
+        }
+
+        .lockout-banner svg {
+            flex-shrink: 0;
+            color: #f87171;
+        }
+
+        .lockout-timer {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fca5a5;
+            letter-spacing: 1px;
+        }
+
+        .lockout-banner-text strong {
+            color: #ffffff;
+            display: block;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        /* Attempt counter badge */
+        .attempt-warning {
+            display: none;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            color: #9a3412;
+            font-size: 13px;
+            font-weight: 600;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attempt-warning.active {
+            display: flex;
+        }
+
+        /* reCAPTCHA wrapper */
+        .recaptcha-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            transform: scale(0.95);
+            transform-origin: left center;
+        }
+
         /* Spinner */
         .spinner {
             display: inline-block;
@@ -2507,8 +2577,43 @@
                             <a href="javascript:void(0)" class="forgot-link" onclick="navigateView('forgot')">Lupa Password?</a>
                         </div>
 
+                        <!-- Lockout Banner (tampil saat terkunci) -->
+                        <div class="lockout-banner" id="lockoutBanner">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <div class="lockout-banner-text">
+                                <strong>Akun sementara dikunci</strong>
+                                Terlalu banyak percobaan login gagal. Silakan tunggu:
+                                <div class="lockout-timer" id="lockoutCountdown">05:00</div>
+                            </div>
+                        </div>
+
+                        <!-- Attempt Warning (tampil setelah percobaan gagal) -->
+                        <div class="attempt-warning" id="attemptWarning">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span id="attemptWarningText">Percobaan ke-1 dari 3. Akun akan dikunci setelah 3 kali gagal.</span>
+                        </div>
+
+                        <!-- reCAPTCHA v2 Widget -->
+                        <div class="recaptcha-wrapper">
+                            <div class="g-recaptcha"
+                                 id="recaptchaWidget"
+                                 data-sitekey="{{ config('services.recaptcha.site_key') }}"
+                                 data-theme="light">
+                            </div>
+                        </div>
+
                         <button type="button" class="submit-btn" id="loginSubmitBtnNonAdmin" onclick="submitNonAdminLogin()">
                             <span id="submitBtnTextNonAdmin">Masuk ke SI-AKAD</span>
+                            <svg id="submitBtnArrowNonAdmin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
                         </button>
 
                         <div class="auth-divider" style="margin-top: 14px;">atau masuk dengan</div>
@@ -4252,6 +4357,61 @@
         }
 
         // ==========================================
+        // RATE LIMITER: LOCKOUT COUNTDOWN TIMER
+        // ==========================================
+        let lockoutInterval = null;
+
+        function startLockoutCountdown(seconds) {
+            const banner = document.getElementById('lockoutBanner');
+            const countdown = document.getElementById('lockoutCountdown');
+            const btn = document.getElementById('loginSubmitBtn');
+            const attemptWarning = document.getElementById('attemptWarning');
+
+            banner.classList.add('active');
+            attemptWarning.classList.remove('active');
+            btn.disabled = true;
+
+            let remaining = seconds;
+
+            function updateDisplay() {
+                const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+                const s = (remaining % 60).toString().padStart(2, '0');
+                countdown.textContent = m + ':' + s;
+            }
+
+            updateDisplay();
+
+            if (lockoutInterval) clearInterval(lockoutInterval);
+            lockoutInterval = setInterval(() => {
+                remaining--;
+                updateDisplay();
+                if (remaining <= 0) {
+                    clearInterval(lockoutInterval);
+                    banner.classList.remove('active');
+                    btn.disabled = false;
+                    // Reset reCAPTCHA
+                    if (typeof grecaptcha !== 'undefined') {
+                        grecaptcha.reset();
+                    }
+                    showToast('Kunci akun telah dibuka. Silakan coba login kembali.', false);
+                }
+            }, 1000);
+        }
+
+        function updateAttemptWarning(attempts, maxAttempts) {
+            const warning = document.getElementById('attemptWarning');
+            const text = document.getElementById('attemptWarningText');
+            if (attempts > 0 && attempts < maxAttempts) {
+                warning.classList.add('active');
+                const remaining = maxAttempts - attempts;
+                text.textContent = 'Percobaan ke-' + attempts + ' dari ' + maxAttempts + '. ' +
+                    (remaining === 1 ? 'Satu kali lagi gagal, akun akan dikunci!' : remaining + ' percobaan tersisa sebelum akun dikunci.');
+            } else {
+                warning.classList.remove('active');
+            }
+        }
+
+        // ==========================================
         // API CALL: LOGIN DENGAN VALIDASI HASH
         // ==========================================
         async function handleApiLoginSubmit(event) {
@@ -4259,7 +4419,8 @@
             const username = document.getElementById('usernameInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
             const role = document.getElementById('selectedRoleInput').value;
-            const remember = document.getElementById('rememberMeCheckbox').checked;
+            const rememberElem = document.getElementById('rememberMeCheckbox') || document.getElementById('rememberMeCheckboxNonAdmin');
+            const remember = rememberElem ? rememberElem.checked : false;
 
             const btn = document.getElementById('loginSubmitBtn');
             const btnText = document.getElementById('submitBtnText');
@@ -4268,6 +4429,16 @@
             if (!username || !password) {
                 showToast('Mohon isi nomor identitas dan kata sandi!', true);
                 return;
+            }
+
+            // Ambil token reCAPTCHA
+            let recaptchaToken = '';
+            if (typeof grecaptcha !== 'undefined') {
+                recaptchaToken = grecaptcha.getResponse();
+                if (!recaptchaToken) {
+                    showToast('Mohon centang verifikasi reCAPTCHA terlebih dahulu!', true);
+                    return;
+                }
             }
 
             btn.disabled = true;
@@ -4279,13 +4450,15 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
                         username: username,
                         password: password,
                         role: role,
-                        remember: remember
+                        remember: remember,
+                        'g-recaptcha-response': recaptchaToken
                     })
                 });
 
@@ -4295,9 +4468,26 @@
                 btnText.textContent = 'Masuk ke SI-AKAD';
                 btnArrow.style.display = 'block';
 
+                // Reset reCAPTCHA setelah setiap attempt
+                if (typeof grecaptcha !== 'undefined') {
+                    grecaptcha.reset();
+                }
+
                 if (response.ok && data.success) {
+                    // Login berhasil: reset semua warning
+                    document.getElementById('attemptWarning').classList.remove('active');
+                    document.getElementById('lockoutBanner').classList.remove('active');
                     showSuccessModal(data.user);
+                } else if (response.status === 429) {
+                    // Rate limit / lockout aktif
+                    const retryAfter = data.retry_after || 300;
+                    startLockoutCountdown(retryAfter);
+                    showToast(data.message || 'Terlalu banyak percobaan. Akun dikunci sementara.', true);
                 } else {
+                    // Login gagal biasa - tampilkan counter percobaan
+                    if (data.attempts !== undefined) {
+                        updateAttemptWarning(data.attempts, data.max_attempts || 3);
+                    }
                     showToast(data.message || 'Login gagal. Periksa kembali data Anda.', true);
                 }
             } catch (err) {

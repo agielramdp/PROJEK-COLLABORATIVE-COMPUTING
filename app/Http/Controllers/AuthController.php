@@ -6,9 +6,11 @@ use App\Models\OtpCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -35,12 +37,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'role'     => 'nullable|string',
+            'username'            => 'required|string',
+            'password'            => 'required|string',
+            'role'                => 'nullable|string',
+            'g-recaptcha-response' => 'required|string',
         ], [
-            'username.required' => 'Nomor identitas (NPM/NIDN/NIP) atau email wajib diisi.',
-            'password.required' => 'Kata sandi wajib diisi.',
+            'username.required'             => 'Nomor identitas (NPM/NIDN/NIP) atau email wajib diisi.',
+            'password.required'             => 'Kata sandi wajib diisi.',
+            'g-recaptcha-response.required' => 'Verifikasi reCAPTCHA wajib diselesaikan.',
         ]);
 
         if ($validator->fails()) {
@@ -51,6 +55,45 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // ============================================
+        // STEP 1: CEK RATE LIMITER (Login Attempt)
+        // ============================================
+        $throttleKey = $this->throttleKey($request);
+        $maxAttempts = 3;
+        $decaySeconds = 300; // 5 menit
+
+        if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
+            $secondsRemaining = RateLimiter::availableIn($throttleKey);
+
+            Log::warning('Login dikunci karena terlalu banyak percobaan', [
+                'ip'         => $request->ip(),
+                'identifier' => $request->input('username'),
+                'retry_in'   => $secondsRemaining . ' detik',
+            ]);
+
+            return response()->json([
+                'success'     => false,
+                'message'     => 'Akun dikunci sementara karena terlalu banyak percobaan login gagal. Silakan tunggu ' . ceil($secondsRemaining / 60) . ' menit.',
+                'retry_after' => $secondsRemaining,
+            ], 429);
+        }
+
+        // ============================================
+        // STEP 2: VERIFIKASI reCAPTCHA
+        // ============================================
+        $recaptchaToken = $request->input('g-recaptcha-response');
+        $recaptchaValid = $this->verifyRecaptcha($recaptchaToken);
+
+        if (!$recaptchaValid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Verifikasi reCAPTCHA gagal. Silakan coba lagi.',
+            ], 422);
+        }
+
+        // ============================================
+        // STEP 3: VALIDASI CREDENTIALS
+        // ============================================
         $identifier = trim($request->input('username'));
         $password   = $request->input('password');
         $roleInput  = $request->input('role');
@@ -69,16 +112,53 @@ class AuthController extends Controller
 
         $user = $userQuery->first();
 
-        // Validasi user & hash password (password_hash)
-        if (!$user || !Hash::check($password, $user->password_hash)) {
+        // Validasi user & hash password (mendukung password_hash atau password)
+        $userPasswordHash = $user ? ($user->password_hash ?? $user->password) : null;
+        if (!$user || !Hash::check($password, $userPasswordHash)) {
+            // Tambah hitungan percobaan gagal
+            RateLimiter::hit($throttleKey, $decaySeconds);
+
+            $attempts    = RateLimiter::attempts($throttleKey);
+            $remaining   = $maxAttempts - $attempts;
+
+            Log::warning('Login gagal', [
+                'ip'         => $request->ip(),
+                'identifier' => $identifier,
+                'attempts'   => $attempts,
+            ]);
+
+            if ($remaining <= 0) {
+                return response()->json([
+                    'success'      => false,
+                    'message'      => 'Akun dikunci selama 5 menit karena terlalu banyak percobaan login gagal.',
+                    'attempts'     => $attempts,
+                    'max_attempts' => $maxAttempts,
+                    'retry_after'  => $decaySeconds,
+                ], 429);
+            }
+
             return response()->json([
-                'success' => false,
-                'message' => 'Nomor identitas/email atau kata sandi tidak cocok. Silakan periksa kembali.'
+                'success'      => false,
+                'message'      => 'Nomor identitas/email atau kata sandi tidak cocok. Silakan periksa kembali.',
+                'attempts'     => $attempts,
+                'remaining'    => $remaining,
+                'max_attempts' => $maxAttempts,
             ], 401);
         }
 
+        // ============================================
+        // STEP 4: LOGIN BERHASIL — Reset Rate Limiter
+        // ============================================
+        RateLimiter::clear($throttleKey);
+
         // Simpan sesi login
         Auth::login($user, $request->boolean('remember'));
+
+        Log::info('Login berhasil', [
+            'user_id' => $user->id,
+            'email'   => $user->email,
+            'ip'      => $request->ip(),
+        ]);
 
         return response()->json([
             'success' => true,
@@ -96,7 +176,46 @@ class AuthController extends Controller
     }
 
     /**
-     * Endpoint Login menggunakan Akun Google (Simulasi/API).
+     * Verifikasi token reCAPTCHA v2 ke Google.
+     */
+    private function verifyRecaptcha(string $token): bool
+    {
+        $secretKey = config('services.recaptcha.secret_key');
+
+        if (empty($secretKey)) {
+            Log::warning('reCAPTCHA secret key tidak dikonfigurasi.');
+            return true; // Bypass jika belum dikonfigurasi (development)
+        }
+
+        try {
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret'   => $secretKey,
+                'response' => $token,
+                'remoteip' => request()->ip(),
+            ]);
+
+            $result = $response->json();
+
+            Log::info('reCAPTCHA verify result', $result);
+
+            return $result['success'] ?? false;
+        } catch (\Exception $e) {
+            Log::error('reCAPTCHA verification error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Generate throttle key unik berdasarkan username + IP.
+     */
+    private function throttleKey(Request $request): string
+    {
+        $identifier = strtolower(trim($request->input('username', '')));
+        return 'login_attempt:' . $identifier . '|' . $request->ip();
+    }
+
+    /**
+     * Endpoint Login menggunakan Akun Google.
      */
     public function googleLogin(Request $request)
     {
