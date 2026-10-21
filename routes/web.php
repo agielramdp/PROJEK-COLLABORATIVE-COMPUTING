@@ -23,6 +23,8 @@ Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])->
 // API Authentication Endpoints
 Route::prefix('api')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+    Route::post('/login-status', [AuthController::class, 'checkLoginStatus'])->name('api.login.status');
+    Route::post('/reset-attempts', [AuthController::class, 'resetAttempts'])->name('api.reset.attempts');
     Route::post('/auth/google', [AuthController::class, 'googleLogin'])->name('api.google.login');
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('api.forgot.password');
     Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('api.verify.otp');

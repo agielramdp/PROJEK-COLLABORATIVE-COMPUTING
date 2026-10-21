@@ -2579,31 +2579,34 @@
 
                         <!-- Container Shared reCAPTCHA & Lockout (Berpindah otomatis ke form role aktif) -->
                         <div id="recaptchaSharedWrapper" style="width: 100%; margin-bottom: 12px;">
-                            <!-- Lockout Banner (tampil saat terkunci) -->
+                            <!-- Lockout Banner (tampil saat form/akun dikunci sementara) -->
                             <div class="lockout-banner" id="lockoutBanner">
                                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
                                 <div class="lockout-banner-text">
-                                    <strong>Akun sementara dikunci</strong>
-                                    Terlalu banyak percobaan login gagal. Silakan tunggu:
+                                    <strong id="lockoutBannerTitle">Form Login Diblokir Sementara</strong>
+                                    <span id="lockoutBannerDesc">Terlalu banyak percobaan login gagal. Silakan tunggu:</span>
                                     <div class="lockout-timer" id="lockoutCountdown">05:00</div>
+                                    <div id="lockoutEmailNotice" style="display:none; margin-top:8px; padding:6px 10px; background:rgba(0,0,0,0.3); border-left:3px solid #facc15; border-radius:6px; font-size:12px; color:#fef08a; line-height:1.4;">
+                                        📧 <strong>Email Peringatan Terkirim:</strong> "Ada aktivitas login mencurigakan pada akun Anda". Silakan periksa kotak masuk email Anda.
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Attempt Warning (tampil setelah percobaan gagal) -->
-                            <div class="attempt-warning" id="attemptWarning">
+                            <!-- Attempt Warning (tampil saat penambahan keamanan aktif) -->
+                            <div class="attempt-warning" id="attemptWarning" style="display:none;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
                                     <line x1="12" y1="9" x2="12" y2="13"></line>
                                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
-                                <span id="attemptWarningText">Percobaan ke-1 dari 3. Akun akan dikunci setelah 3 kali gagal.</span>
+                                <span id="attemptWarningText"></span>
                             </div>
 
-                            <!-- reCAPTCHA v2 Widget -->
-                            <div class="recaptcha-wrapper">
+                            <!-- reCAPTCHA v2 Widget (Muncul sejak awal untuk Bendahara & Admin; muncul setelah Percobaan 3 Gagal untuk Mahasiswa & Dosen) -->
+                            <div class="recaptcha-wrapper" id="recaptchaWrapperContainer" style="display:none;">
                                 <div class="g-recaptcha"
                                      id="recaptchaWidget"
                                      data-sitekey="{{ config('services.recaptcha.site_key') }}"
@@ -2649,6 +2652,9 @@
 
                         <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentials()">
                             <span>⚡ Klik untuk Isi Kredensial Demo Cepat</span>
+                        </button>
+                        <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                            <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
                         </button>
                     </div>
 
@@ -2760,6 +2766,9 @@
                             <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentials()">
                                 <span>⚡ Klik untuk Isi Kredensial Demo Cepat</span>
                             </button>
+                            <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                                <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
+                            </button>
                         </form>
                     </div>
 
@@ -2869,6 +2878,9 @@
                             <!-- Demo Fill -->
                             <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsMhs()">
                                 <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                            <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                                <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
                             </button>
                         </form>
                     </div>
@@ -2980,6 +2992,9 @@
                             <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsDosen()">
                                 <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
                             </button>
+                            <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                                <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
+                            </button>
                         </form>
                     </div>
 
@@ -3090,6 +3105,9 @@
                             <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsDosenWali()">
                                 <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
                             </button>
+                            <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                                <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
+                            </button>
                         </form>
                     </div>
 
@@ -3199,6 +3217,9 @@
                             <!-- Demo Fill -->
                             <button type="button" class="demo-fill-btn" style="margin-top:10px;" onclick="fillDemoCredentialsBendahara()">
                                 <span>&#9889; Klik untuk Isi Kredensial Demo Cepat</span>
+                            </button>
+                            <button type="button" class="demo-fill-btn" data-action-reset="true" style="margin-top:6px; background:#f8fafc; border:1px dashed #cbd5e1; color:#64748b;" onclick="resetDemoAttempts()">
+                                <span>🔄 Reset Percobaan &amp; Buka Kunci (Demo)</span>
                             </button>
                         </form>
                     </div>
@@ -4262,6 +4283,7 @@
             if (targetForm && targetBtn && wrapper.parentNode !== targetForm) {
                 targetForm.insertBefore(wrapper, targetBtn);
             }
+            syncRecaptchaVisibility();
         }
 
         // Role Card Click
@@ -4424,22 +4446,86 @@
         }
 
         // ==========================================
-        // RATE LIMITER: LOCKOUT COUNTDOWN TIMER
+        // RATE LIMITER & ACCOUNT LOCKOUT MANAGEMENT
         // ==========================================
         let lockoutInterval = null;
+        let currentFailedAttempts = parseInt(localStorage.getItem('siakad_failed_attempts') || '0', 10);
 
         function getAllSubmitButtons() {
             return document.querySelectorAll('.admin-login-btn, .mahasiswa-login-btn, .dosen-login-btn, .dosen-wali-login-btn, .bendahara-login-btn, .submit-btn');
         }
 
-        function startLockoutCountdown(seconds) {
+        function getActiveFormUsername() {
+            let input = null;
+            if (currentRoleKey === 'admin') input = document.getElementById('usernameInput');
+            else if (currentRoleKey === 'mahasiswa') input = document.getElementById('usernameInputMahasiswa');
+            else if (currentRoleKey === 'dosen_pengajar') input = document.getElementById('usernameInputDosen');
+            else if (currentRoleKey === 'dosen_wali') input = document.getElementById('usernameInputDosenWali');
+            else if (currentRoleKey === 'bendahara') input = document.getElementById('usernameInputBendahara');
+            else input = document.getElementById('usernameInputNonAdmin');
+            return input ? input.value.trim() : '';
+        }
+
+        function isRoleRecaptchaRequired(roleKey) {
+            const isAdminOrBendahara = (roleKey === 'admin' || roleKey === 'bendahara');
+            return isAdminOrBendahara || (currentFailedAttempts >= 3);
+        }
+
+        function syncRecaptchaVisibility() {
+            const container = document.getElementById('recaptchaWrapperContainer');
+            if (!container) return;
+
+            const shouldShow = isRoleRecaptchaRequired(currentRoleKey);
+            container.style.display = shouldShow ? 'flex' : 'none';
+        }
+
+        function setFormInputsDisabled(disabled) {
+            const inputs = document.querySelectorAll(
+                '#authLoginForm input, #authLoginFormMahasiswa input, #authLoginFormDosen input, ' +
+                '#authLoginFormDosenWali input, #authLoginFormBendahara input, #nonAdminLoginSection input'
+            );
+            inputs.forEach(inp => {
+                inp.disabled = disabled;
+                inp.style.opacity = disabled ? '0.6' : '1';
+                inp.style.cursor = disabled ? 'not-allowed' : 'text';
+            });
+
+            getAllSubmitButtons().forEach(b => {
+                b.disabled = disabled;
+                b.style.opacity = disabled ? '0.6' : '1';
+                b.style.cursor = disabled ? 'not-allowed' : 'pointer';
+            });
+        }
+
+        function startLockoutCountdown(seconds, emailSent = false, attempts = 4) {
             const banner = document.getElementById('lockoutBanner');
             const countdown = document.getElementById('lockoutCountdown');
             const attemptWarning = document.getElementById('attemptWarning');
+            const bannerTitle = document.getElementById('lockoutBannerTitle');
+            const bannerDesc = document.getElementById('lockoutBannerDesc');
+            const emailNotice = document.getElementById('lockoutEmailNotice');
 
             if (banner) banner.classList.add('active');
-            if (attemptWarning) attemptWarning.classList.remove('active');
-            getAllSubmitButtons().forEach(b => b.disabled = true);
+            if (attemptWarning) attemptWarning.style.display = 'none';
+
+            // Judul dan keterangan banner dinamis sesuai tingkat percobaan
+            if (attempts >= 5 || emailSent) {
+                if (bannerTitle) bannerTitle.textContent = 'Form Login Diblokir Sementara (15 Menit)';
+                if (bannerDesc) bannerDesc.textContent = 'Percobaan login ke-5 gagal. Form login diblokir selama 15 menit.';
+                if (emailNotice) emailNotice.style.display = 'block';
+            } else {
+                if (bannerTitle) bannerTitle.textContent = 'Form Login Diblokir Sementara (5 Menit)';
+                if (bannerDesc) bannerDesc.textContent = 'Percobaan login ke-4 gagal. Form login diblokir selama 5 menit.';
+                if (emailNotice) emailNotice.style.display = 'none';
+            }
+
+            setFormInputsDisabled(true);
+
+            // Simpan status lockout ke localStorage agar tetap terkunci meski halaman di-refresh
+            const lockoutUntil = Math.floor(Date.now() / 1000) + seconds;
+            localStorage.setItem('siakad_lockout_until', lockoutUntil);
+            localStorage.setItem('siakad_lockout_email_sent', emailSent ? 'true' : 'false');
+            localStorage.setItem('siakad_lockout_attempts', attempts);
 
             let remaining = seconds;
 
@@ -4457,28 +4543,66 @@
                 updateDisplay();
                 if (remaining <= 0) {
                     clearInterval(lockoutInterval);
+                    lockoutInterval = null;
                     if (banner) banner.classList.remove('active');
-                    getAllSubmitButtons().forEach(b => b.disabled = false);
+                    if (emailNotice) emailNotice.style.display = 'none';
+                    setFormInputsDisabled(false);
+                    localStorage.removeItem('siakad_lockout_until');
+                    localStorage.removeItem('siakad_lockout_email_sent');
+                    localStorage.removeItem('siakad_lockout_attempts');
                     if (typeof grecaptcha !== 'undefined') {
                         grecaptcha.reset();
                     }
-                    showToast('Kunci akun telah dibuka. Silakan coba login kembali.', false);
+                    syncRecaptchaVisibility();
+                    showToast('Masa blokir formulir login telah selesai. Silakan coba login kembali.', false);
                 }
             }, 1000);
         }
 
-        function updateAttemptWarning(attempts, maxAttempts) {
-            const warning = document.getElementById('attemptWarning');
-            const text = document.getElementById('attemptWarningText');
-            if (!warning || !text) return;
+        function clearAllLockoutState() {
+            if (lockoutInterval) {
+                clearInterval(lockoutInterval);
+                lockoutInterval = null;
+            }
+            const banner = document.getElementById('lockoutBanner');
+            const attemptWarning = document.getElementById('attemptWarning');
+            const emailNotice = document.getElementById('lockoutEmailNotice');
+            if (banner) banner.classList.remove('active');
+            if (attemptWarning) attemptWarning.style.display = 'none';
+            if (emailNotice) emailNotice.style.display = 'none';
+            setFormInputsDisabled(false);
+            localStorage.removeItem('siakad_lockout_until');
+            localStorage.removeItem('siakad_lockout_email_sent');
+            localStorage.removeItem('siakad_lockout_attempts');
+            localStorage.removeItem('siakad_failed_attempts');
+            currentFailedAttempts = 0;
+        }
 
-            if (attempts > 0 && attempts < maxAttempts) {
-                warning.classList.add('active');
-                const remaining = maxAttempts - attempts;
-                text.textContent = 'Percobaan ke-' + attempts + ' dari ' + maxAttempts + '. ' +
-                    (remaining === 1 ? 'Satu kali lagi gagal, akun akan dikunci!' : remaining + ' percobaan tersisa sebelum akun dikunci.');
-            } else {
-                warning.classList.remove('active');
+        async function resetDemoAttempts() {
+            try {
+                const res = await fetch('/api/reset-attempts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        username: getActiveFormUsername(),
+                        role: currentRoleKey
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    clearAllLockoutState();
+                    syncRecaptchaVisibility();
+                    if (typeof grecaptcha !== 'undefined') {
+                        grecaptcha.reset();
+                    }
+                    showToast('Hitungan percobaan dan status lockout berhasil di-reset untuk demo!', false);
+                }
+            } catch (e) {
+                showToast('Gagal me-reset status lockout.', true);
             }
         }
 
@@ -4491,13 +4615,19 @@
                 return;
             }
 
-            // Validasi reCAPTCHA
+            // Validasi reCAPTCHA sesuai aturan role & jumlah percobaan gagal:
+            // Admin & Bendahara: wajib sejak awal.
+            // Mahasiswa & Dosen: wajib jika currentFailedAttempts >= 3.
+            const reqRecaptcha = isRoleRecaptchaRequired(role);
             let recaptchaToken = '';
-            if (typeof grecaptcha !== 'undefined') {
-                recaptchaToken = grecaptcha.getResponse();
-                if (!recaptchaToken) {
-                    showToast('Mohon centang verifikasi reCAPTCHA terlebih dahulu!', true);
-                    return;
+
+            if (reqRecaptcha) {
+                if (typeof grecaptcha !== 'undefined') {
+                    recaptchaToken = grecaptcha.getResponse();
+                    if (!recaptchaToken) {
+                        showToast('Verifikasi reCAPTCHA wajib diselesaikan terlebih dahulu!', true);
+                        return;
+                    }
                 }
             }
 
@@ -4535,20 +4665,39 @@
                 }
 
                 if (response.ok && data.success) {
-                    const warningElem = document.getElementById('attemptWarning');
-                    const lockoutElem = document.getElementById('lockoutBanner');
-                    if (warningElem) warningElem.classList.remove('active');
-                    if (lockoutElem) lockoutElem.classList.remove('active');
+                    clearAllLockoutState();
+                    syncRecaptchaVisibility();
                     showSuccessModal(data.user);
                 } else if (response.status === 429) {
-                    const retryAfter = data.retry_after || 300;
-                    startLockoutCountdown(retryAfter);
-                    showToast(data.message || 'Terlalu banyak percobaan. Akun dikunci sementara.', true);
+                    currentFailedAttempts = data.attempts || 4;
+                    localStorage.setItem('siakad_failed_attempts', currentFailedAttempts);
+                    syncRecaptchaVisibility();
+                    startLockoutCountdown(data.retry_after || 300, data.email_sent || false, currentFailedAttempts);
+                    showToast(data.message || 'Form login diblokir sementara.', true);
                 } else {
-                    if (data.attempts !== undefined) {
-                        updateAttemptWarning(data.attempts, data.max_attempts || 3);
+                    currentFailedAttempts = data.attempts || (currentFailedAttempts + 1);
+                    localStorage.setItem('siakad_failed_attempts', currentFailedAttempts);
+                    syncRecaptchaVisibility();
+
+                    const warning = document.getElementById('attemptWarning');
+                    const warningText = document.getElementById('attemptWarningText');
+
+                    // Percobaan 1 & 2 Gagal: Sistem HANYA menampilkan pesan error "NPM/Email atau Password Salah"
+                    // Percobaan 3 Gagal: Sistem memicu penambahan keamanan, mewajibkan reCAPTCHA
+                    if (currentFailedAttempts >= 3) {
+                        if (warning && warningText) {
+                            warning.style.display = 'flex';
+                            if (role === 'admin' || role === 'bendahara') {
+                                warningText.textContent = '⚠️ Peringatan Keamanan: 3x login gagal. 1 kali lagi gagal, formulir login akan diblokir 5 menit!';
+                            } else {
+                                warningText.textContent = '🛡️ Keamanan Tambahan Diaktifkan: Verifikasi reCAPTCHA kini wajib diisi karena 3 kali percobaan gagal.';
+                            }
+                        }
+                    } else {
+                        if (warning) warning.style.display = 'none';
                     }
-                    showToast(data.message || 'Login gagal. Periksa kembali data Anda.', true);
+
+                    showToast(data.message || 'NPM/Email atau Password Salah', true);
                 }
             } catch (err) {
                 if (btn) btn.disabled = false;
@@ -4871,8 +5020,20 @@
             }, 3500);
         }
 
-        // Handle Google OAuth callback feedback on load
+        // Handle Google OAuth callback feedback & Restore lockout countdown on load
         window.addEventListener('DOMContentLoaded', () => {
+            const savedLockoutUntil = parseInt(localStorage.getItem('siakad_lockout_until') || '0', 10);
+            const nowSec = Math.floor(Date.now() / 1000);
+            if (savedLockoutUntil > nowSec) {
+                const remaining = savedLockoutUntil - nowSec;
+                const emailSent = localStorage.getItem('siakad_lockout_email_sent') === 'true';
+                const attempts = parseInt(localStorage.getItem('siakad_lockout_attempts') || '4', 10);
+                startLockoutCountdown(remaining, emailSent, attempts);
+            }
+
+            attachRecaptchaToActiveForm();
+            syncRecaptchaVisibility();
+
             const urlParams = new URLSearchParams(window.location.search);
             const error = urlParams.get('error');
 

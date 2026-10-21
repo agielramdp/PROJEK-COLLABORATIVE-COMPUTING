@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,19 +33,105 @@ class AuthController extends Controller
     }
 
     /**
-     * Endpoint API Login dengan validasi hash password di db_sistem_akademik.users
+     * Dapatkan kunci throttle dan status lockout untuk identitas & IP tertentu.
+     */
+    private function getThrottleKeys(Request $request): array
+    {
+        $identifier = strtolower(trim((string) $request->input('username', '')));
+        $ip = $request->ip();
+
+        $user = null;
+        if (!empty($identifier)) {
+            $user = User::where(function ($query) use ($identifier) {
+                $query->where('email', $identifier)
+                      ->orWhere('npm', $identifier)
+                      ->orWhere('username', $identifier);
+            })->first();
+        }
+
+        // Kunci throttle terikat pada User ID jika ditemukan, atau hash dari input jika tidak
+        $accountTag  = $user ? 'user_' . $user->id : 'raw_' . md5($identifier);
+        $throttleKey = 'auth_attempt:' . $accountTag . '|' . $ip;
+        $lockoutKey  = 'auth_lockout:' . $accountTag . '|' . $ip;
+
+        return [
+            'identifier'  => $identifier,
+            'user'        => $user,
+            'throttleKey' => $throttleKey,
+            'lockoutKey'  => $lockoutKey,
+            'ip'          => $ip,
+        ];
+    }
+
+    /**
+     * Endpoint API untuk mengecek status percobaan login & lockout akun saat ini
+     */
+    public function checkLoginStatus(Request $request)
+    {
+        $throttleData = $this->getThrottleKeys($request);
+        $throttleKey  = $throttleData['throttleKey'];
+        $lockoutKey   = $throttleData['lockoutKey'];
+
+        $lockoutUntil = Cache::get($lockoutKey);
+        $locked       = false;
+        $retryAfter   = 0;
+
+        if ($lockoutUntil && now()->timestamp < $lockoutUntil) {
+            $locked     = true;
+            $retryAfter = $lockoutUntil - now()->timestamp;
+        }
+
+        $attempts = (int) Cache::get($throttleKey, 0);
+
+        $roleInput          = strtolower(trim((string) $request->input('role', '')));
+        $isAdminOrBendahara = in_array($roleInput, ['admin', 'bendahara']);
+        $requireRecaptcha   = $isAdminOrBendahara || ($attempts >= 3);
+
+        return response()->json([
+            'success'               => true,
+            'attempts'              => $attempts,
+            'locked'                => $locked,
+            'retry_after'           => $retryAfter,
+            'require_recaptcha'     => $requireRecaptcha,
+            'is_admin_or_bendahara' => $isAdminOrBendahara,
+        ]);
+    }
+
+    /**
+     * Endpoint API untuk me-reset percobaan login akun (kemudahan demonstrasi & testing)
+     */
+    public function resetAttempts(Request $request)
+    {
+        $throttleData = $this->getThrottleKeys($request);
+        Cache::forget($throttleData['throttleKey']);
+        Cache::forget($throttleData['lockoutKey']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hitungan percobaan login dan status lockout berhasil di-reset untuk demonstrasi.',
+        ]);
+    }
+
+    /**
+     * Endpoint API Login dengan Login Attempt Limiting dan Account Lockout
+     * 
+     * Alur:
+     * - Percobaan 1 Gagal: Pesan error "NPM/Email atau Password Salah".
+     * - Percobaan 2 Gagal: Pesan error "NPM/Email atau Password Salah".
+     * - Percobaan 3 Gagal: Sistem memicu penambahan keamanan, mewajibkan reCAPTCHA untuk mahasiswa dan dosen (reCAPTCHA muncul sejak awal untuk Bendahara dan Admin).
+     * - Percobaan 4 Gagal: Form login diblokir sementara selama 5 menit (300 detik) untuk semua role.
+     * - Percobaan 5 Gagal: Form login diblokir sementara selama 15 menit (900 detik) DAN sistem mengirimkan email peringatan: "Ada aktivitas login mencurigakan pada akun Anda".
      */
     public function login(Request $request)
     {
+        // 1. Validasi input dasar (username & password)
         $validator = Validator::make($request->all(), [
-            'username'            => 'required|string',
-            'password'            => 'required|string',
-            'role'                => 'nullable|string',
-            'g-recaptcha-response' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'role'     => 'nullable|string',
         ], [
-            'username.required'             => 'Nomor identitas (NPM/NIDN/NIP) atau email wajib diisi.',
-            'password.required'             => 'Kata sandi wajib diisi.',
-            'g-recaptcha-response.required' => 'Verifikasi reCAPTCHA wajib diselesaikan.',
+            'username.required' => 'Nomor identitas (NPM/NIDN/NIP) atau email wajib diisi.',
+            'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
         if ($validator->fails()) {
@@ -55,50 +142,78 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // ============================================
-        // STEP 1: CEK RATE LIMITER (Login Attempt)
-        // ============================================
-        $throttleKey = $this->throttleKey($request);
-        $maxAttempts = 3;
-        $decaySeconds = 300; // 5 menit
+        $throttleData = $this->getThrottleKeys($request);
+        $identifier   = $throttleData['identifier'];
+        $throttleKey  = $throttleData['throttleKey'];
+        $lockoutKey   = $throttleData['lockoutKey'];
+        $user         = $throttleData['user'];
+        $ip           = $throttleData['ip'];
 
-        if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
-            $secondsRemaining = RateLimiter::availableIn($throttleKey);
+        // =======================================================
+        // STEP 1: CEK APAKAH AKUN SEDANG DALAM STATUS LOCKOUT
+        // =======================================================
+        $lockoutUntil = Cache::get($lockoutKey);
+        if ($lockoutUntil && now()->timestamp < $lockoutUntil) {
+            $secondsRemaining = $lockoutUntil - now()->timestamp;
+            $minutesRemaining = ceil($secondsRemaining / 60);
+            $currentAttempts  = (int) Cache::get($throttleKey, 4);
 
-            Log::warning('Login dikunci karena terlalu banyak percobaan', [
-                'ip'         => $request->ip(),
-                'identifier' => $request->input('username'),
-                'retry_in'   => $secondsRemaining . ' detik',
+            Log::warning('Login ditolak: Akun sedang dalam masa lockout', [
+                'identifier' => $identifier,
+                'ip'         => $ip,
+                'remaining'  => $secondsRemaining . ' detik',
+                'attempts'   => $currentAttempts,
             ]);
 
             return response()->json([
-                'success'     => false,
-                'message'     => 'Akun dikunci sementara karena terlalu banyak percobaan login gagal. Silakan tunggu ' . ceil($secondsRemaining / 60) . ' menit.',
-                'retry_after' => $secondsRemaining,
+                'success'           => false,
+                'locked'            => true,
+                'retry_after'       => $secondsRemaining,
+                'attempts'          => $currentAttempts,
+                'require_recaptcha' => true,
+                'message'           => "Form login Anda sedang diblokir sementara. Silakan tunggu {$minutesRemaining} menit ({$secondsRemaining} detik lagi).",
             ], 429);
         }
 
-        // ============================================
-        // STEP 2: VERIFIKASI reCAPTCHA
-        // ============================================
-        $recaptchaToken = $request->input('g-recaptcha-response');
-        $recaptchaValid = $this->verifyRecaptcha($recaptchaToken);
+        // =======================================================
+        // STEP 2: CEK KEWAJIBAN reCAPTCHA
+        // - Role Bendahara dan Admin: reCAPTCHA aktif SEJAK AWAL
+        // - Role Mahasiswa dan Dosen: Wajib reCAPTCHA SETELAH Percobaan 3 Gagal (attempts >= 3)
+        // =======================================================
+        $roleInput          = strtolower(trim((string) $request->input('role', '')));
+        $isAdminOrBendahara = in_array($roleInput, ['admin', 'bendahara']);
+        $attemptsBefore     = (int) Cache::get($throttleKey, 0);
+        $isRecaptchaRequired = $isAdminOrBendahara || ($attemptsBefore >= 3);
 
-        if (!$recaptchaValid) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Verifikasi reCAPTCHA gagal. Silakan coba lagi.',
-            ], 422);
+        if ($isRecaptchaRequired) {
+            $recaptchaToken = $request->input('g-recaptcha-response');
+
+            if (empty($recaptchaToken)) {
+                return response()->json([
+                    'success'           => false,
+                    'require_recaptcha' => true,
+                    'attempts'          => $attemptsBefore,
+                    'message'           => 'Verifikasi reCAPTCHA wajib diselesaikan.',
+                ], 422);
+            }
+
+            $recaptchaValid = $this->verifyRecaptcha($recaptchaToken);
+            if (!$recaptchaValid) {
+                return response()->json([
+                    'success'           => false,
+                    'require_recaptcha' => true,
+                    'attempts'          => $attemptsBefore,
+                    'message'           => 'Verifikasi reCAPTCHA tidak valid. Silakan coba lagi.',
+                ], 422);
+            }
         }
 
-        // ============================================
-        // STEP 3: VALIDASI CREDENTIALS
-        // ============================================
-        $identifier = trim($request->input('username'));
-        $password   = $request->input('password');
-        $roleInput  = $request->input('role');
+        // =======================================================
+        // STEP 3: VALIDASI KREDENSIAL (User & Hash Password)
+        // =======================================================
+        $password = $request->input('password');
 
-        // Cari user di db_sistem_akademik berdasarkan email, npm, atau username
+        // Pastikan pencarian user konsisten dengan role jika role dikirim
         $userQuery = User::where(function ($query) use ($identifier) {
             $query->where('email', $identifier)
                   ->orWhere('npm', $identifier)
@@ -110,67 +225,142 @@ class AuthController extends Controller
             $userQuery->where('role', $mappedRole);
         }
 
-        $user = $userQuery->first();
+        $matchedUser = $userQuery->first();
+        $userPasswordHash = $matchedUser ? ($matchedUser->password_hash ?? $matchedUser->password) : null;
+        $isPasswordCorrect = $matchedUser && Hash::check($password, $userPasswordHash);
 
-        // Validasi user & hash password (mendukung password_hash atau password)
-        $userPasswordHash = $user ? ($user->password_hash ?? $user->password) : null;
-        if (!$user || !Hash::check($password, $userPasswordHash)) {
-            // Tambah hitungan percobaan gagal
-            RateLimiter::hit($throttleKey, $decaySeconds);
+        // =======================================================
+        // STEP 4: JIKA LOGIN GAGAL (KREDENSIAL SALAH)
+        // =======================================================
+        if (!$isPasswordCorrect) {
+            $newAttempts = $attemptsBefore + 1;
+            Cache::put($throttleKey, $newAttempts, now()->addHours(2));
 
-            $attempts    = RateLimiter::attempts($throttleKey);
-            $remaining   = $maxAttempts - $attempts;
-
-            Log::warning('Login gagal', [
-                'ip'         => $request->ip(),
+            Log::warning('Percobaan login gagal', [
                 'identifier' => $identifier,
-                'attempts'   => $attempts,
+                'ip'         => $ip,
+                'attempt'    => $newAttempts,
             ]);
 
-            if ($remaining <= 0) {
+            // KASUS 1 & 2: Percobaan 1 atau 2 Gagal
+            // Sistem hanya menampilkan pesan error "NPM/Email atau Password Salah"
+            if ($newAttempts < 3) {
                 return response()->json([
-                    'success'      => false,
-                    'message'      => 'Akun dikunci selama 5 menit karena terlalu banyak percobaan login gagal.',
-                    'attempts'     => $attempts,
-                    'max_attempts' => $maxAttempts,
-                    'retry_after'  => $decaySeconds,
+                    'success'           => false,
+                    'attempts'          => $newAttempts,
+                    'require_recaptcha' => $isAdminOrBendahara,
+                    'message'           => 'NPM/Email atau Password Salah',
+                ], 401);
+            }
+
+            // KASUS 3: Percobaan 3 Gagal
+            // Sistem memicu penambahan keamanan, mewajibkan pengisian reCAPTCHA untuk mahasiswa dan dosen
+            if ($newAttempts === 3) {
+                $message = $isAdminOrBendahara
+                    ? 'NPM/Email atau Password Salah. Peringatan: 1 kali lagi gagal, form login akan dikunci 5 menit!'
+                    : 'NPM/Email atau Password Salah. Sistem mendeteksi 3 kali kegagalan, verifikasi reCAPTCHA kini wajib diisi.';
+
+                return response()->json([
+                    'success'           => false,
+                    'attempts'          => 3,
+                    'require_recaptcha' => true,
+                    'message'           => $message,
+                ], 401);
+            }
+
+            // KASUS 4: Percobaan 4 Gagal
+            // System memblokir form login pengguna tersebut sementara selama 5 menit (300 detik)
+            if ($newAttempts === 4) {
+                $lockDuration = 300; // 5 menit
+                Cache::put($lockoutKey, now()->addSeconds($lockDuration)->timestamp, now()->addMinutes(10));
+
+                Log::warning('Akun dikunci 5 menit karena percobaan gagal ke-4', [
+                    'identifier' => $identifier,
+                    'ip'         => $ip,
+                ]);
+
+                return response()->json([
+                    'success'           => false,
+                    'locked'            => true,
+                    'retry_after'       => $lockDuration,
+                    'attempts'          => 4,
+                    'require_recaptcha' => true,
+                    'message'           => 'Percobaan login gagal ke-4. Form login diblokir sementara selama 5 menit demi keamanan akun.',
                 ], 429);
             }
 
+            // KASUS 5: Percobaan 5 Gagal (atau lebih)
+            // System memblokir form login pengguna tersebut sementara selama 15 menit (900 detik)
+            // DAN mengutus sistem untuk mengirimkan email peringatan: "Ada aktivitas login mencurigakan pada akun Anda".
+            $lockDuration = 900; // 15 menit
+            Cache::put($lockoutKey, now()->addSeconds($lockDuration)->timestamp, now()->addMinutes(30));
+
+            $emailSent = false;
+            $targetUser = $matchedUser ?? $user;
+
+            if ($targetUser && !empty($targetUser->email)) {
+                try {
+                    $emailData = [
+                        'name'       => $targetUser->name,
+                        'email'      => $targetUser->email,
+                        'npm'        => $targetUser->npm ?? '-',
+                        'ip'         => $ip,
+                        'user_agent' => $request->userAgent() ?? 'Perangkat Tidak Dikenal',
+                        'time'       => now()->translatedFormat('d F Y, H:i:s') . ' WIB',
+                    ];
+
+                    Mail::send('emails.suspicious_login', $emailData, function ($mail) use ($targetUser) {
+                        $mail->to($targetUser->email, $targetUser->name)
+                             ->subject('Ada aktivitas login mencurigakan pada akun Anda');
+                    });
+
+                    $emailSent = true;
+                    Log::info("Email peringatan login mencurigakan berhasil dikirim ke: {$targetUser->email}");
+                } catch (\Throwable $e) {
+                    Log::error("Gagal mengirim email aktivitas mencurigakan: " . $e->getMessage());
+                }
+            } else {
+                Log::warning("Percobaan ke-5 gagal untuk identifier [{$identifier}], email tidak terdaftar sehingga notifikasi email dilewati.");
+            }
+
             return response()->json([
-                'success'      => false,
-                'message'      => 'Nomor identitas/email atau kata sandi tidak cocok. Silakan periksa kembali.',
-                'attempts'     => $attempts,
-                'remaining'    => $remaining,
-                'max_attempts' => $maxAttempts,
-            ], 401);
+                'success'           => false,
+                'locked'            => true,
+                'retry_after'       => $lockDuration,
+                'attempts'          => $newAttempts,
+                'email_sent'        => $emailSent,
+                'require_recaptcha' => true,
+                'message'           => 'Percobaan login gagal ke-5. Form login diblokir sementara selama 15 menit. ' .
+                                       ($emailSent ? 'Sistem telah mengirimkan email peringatan ke akun Anda.' : 'Ada aktivitas login mencurigakan pada akun Anda.'),
+            ], 429);
         }
 
-        // ============================================
-        // STEP 4: LOGIN BERHASIL — Reset Rate Limiter
-        // ============================================
-        RateLimiter::clear($throttleKey);
+        // =======================================================
+        // STEP 5: LOGIN BERHASIL — Reset Hitungan & Status Lockout
+        // =======================================================
+        Cache::forget($throttleKey);
+        Cache::forget($lockoutKey);
 
-        // Simpan sesi login
-        Auth::login($user, $request->boolean('remember'));
+        Auth::login($matchedUser, $request->boolean('remember'));
 
         Log::info('Login berhasil', [
-            'user_id' => $user->id,
-            'email'   => $user->email,
-            'ip'      => $request->ip(),
+            'user_id' => $matchedUser->id,
+            'email'   => $matchedUser->email,
+            'role'    => $matchedUser->role,
+            'ip'      => $ip,
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Login berhasil! Selamat datang kembali di SI-AKAD.',
             'user' => [
-                'id'       => $user->id,
-                'npm'      => $user->npm,
-                'name'     => $user->name,
-                'email'    => $user->email,
-                'username' => $user->username,
-                'role'     => $user->role,
-                'avatar'   => strtoupper(substr($user->name, 0, 2)),
+                'id'       => $matchedUser->id,
+                'npm'      => $matchedUser->npm,
+                'name'     => $matchedUser->name,
+                'email'    => $matchedUser->email,
+                'username' => $matchedUser->username,
+                'role'     => $matchedUser->role,
+                'avatar'   => strtoupper(substr($matchedUser->name, 0, 2)),
             ]
         ]);
     }
@@ -180,6 +370,11 @@ class AuthController extends Controller
      */
     private function verifyRecaptcha(string $token): bool
     {
+        // Bypass untuk demonstrasi/testing jika menggunakan token simulasi
+        if (config('app.debug') && in_array($token, ['demo_bypass', 'test_token', 'bypass_recaptcha'])) {
+            return true;
+        }
+
         $secretKey = config('services.recaptcha.secret_key');
 
         if (empty($secretKey)) {
@@ -196,22 +391,13 @@ class AuthController extends Controller
 
             $result = $response->json();
 
-            Log::info('reCAPTCHA verify result', $result);
+            Log::info('reCAPTCHA verify result', $result ?? []);
 
             return $result['success'] ?? false;
         } catch (\Exception $e) {
             Log::error('reCAPTCHA verification error: ' . $e->getMessage());
             return false;
         }
-    }
-
-    /**
-     * Generate throttle key unik berdasarkan username + IP.
-     */
-    private function throttleKey(Request $request): string
-    {
-        $identifier = strtolower(trim($request->input('username', '')));
-        return 'login_attempt:' . $identifier . '|' . $request->ip();
     }
 
     /**
