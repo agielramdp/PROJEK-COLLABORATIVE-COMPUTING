@@ -10,6 +10,11 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+// Admin Dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
 Route::get('/login', function () {
     return view('login', [
         'googleConfigured' => !empty(config('services.google.client_id')),
