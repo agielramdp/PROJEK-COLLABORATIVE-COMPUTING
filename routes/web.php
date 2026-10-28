@@ -15,6 +15,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
+// Mahasiswa Dashboard
+Route::get('/dashboard-mahasiswa', function () {
+    return view('dashboard-mahasiswa');
+})->name('dashboard.mahasiswa');
+
 Route::get('/login', function () {
     return view('login', [
         'googleConfigured' => !empty(config('services.google.client_id')),
