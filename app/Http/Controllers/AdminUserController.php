@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -151,6 +152,13 @@ class AdminUserController extends Controller
 
             $user->save();
 
+            AuditLogger::log('CREATE_USER', 'Users', [
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'username' => $user->username,
+                'role'     => $user->role,
+            ], $user->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Akun pengguna berhasil ditambahkan!',
@@ -278,6 +286,13 @@ class AdminUserController extends Controller
 
             $user->save();
 
+            AuditLogger::log('UPDATE_USER', 'Users', [
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'username' => $user->username,
+                'role'     => $user->role,
+            ], $user->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Data pengguna berhasil diperbarui!',
@@ -315,7 +330,15 @@ class AdminUserController extends Controller
             }
 
             $userName = $user->name;
+            $userRole = $user->role;
+            $userEmail = $user->email;
             $user->delete();
+
+            AuditLogger::log('DELETE_USER', 'Users', [
+                'name'  => $userName,
+                'email' => $userEmail,
+                'role'  => $userRole,
+            ], $id);
 
             return response()->json([
                 'success' => true,
@@ -325,6 +348,268 @@ class AdminUserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus pengguna: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Endpoint API: Reset password manual oleh Admin (Item 10)
+     * POST /api/admin/users/{id}/reset-password
+     */
+    public function apiResetPasswordManual(Request $request, $id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak ditemukan.',
+                ], 404);
+            }
+
+            // Jika admin menginput password custom
+            $customPassword = trim($request->input('password', ''));
+            if (!empty($customPassword)) {
+                if (strlen($customPassword) < 6) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Kata sandi minimal 6 karakter.',
+                    ], 422);
+                }
+                $newPassword = $customPassword;
+            } else {
+                // Auto generate password acak
+                $newPassword = 'SIA@' . rand(100000, 999999);
+            }
+
+            $user->password_hash = Hash::make($newPassword);
+            $user->save();
+
+            AuditLogger::log('RESET_PASSWORD', 'Users', [
+                'target_user_id' => $user->id,
+                'target_name'    => $user->name,
+                'target_email'   => $user->email,
+                'reset_mode'     => !empty($customPassword) ? 'manual_input' : 'auto_generated',
+            ], $user->id);
+
+            return response()->json([
+                'success'      => true,
+                'message'      => "Kata sandi untuk '{$user->name}' berhasil direset.",
+                'new_password' => $newPassword,
+                'user'         => [
+                    'id'       => $user->id,
+                    'name'     => $user->name,
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                ],
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mereset kata sandi: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Endpoint API: Export Data Pengguna ke CSV/Excel (Item 7)
+     * GET /api/admin/users/export
+     */
+    public function apiExport(Request $request)
+    {
+        try {
+            $role   = trim($request->input('role', ''));
+            $search = trim($request->input('search', ''));
+
+            $query = User::query();
+
+            if (!empty($role) && strtolower($role) !== 'semua' && strtolower($role) !== 'all') {
+                $query->where('role', $role);
+            }
+
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('username', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('npm', 'LIKE', "%{$search}%");
+                });
+            }
+
+            $users = $query->orderBy('id', 'asc')->get();
+
+            AuditLogger::log('EXPORT_USERS', 'Users', [
+                'total_rows' => $users->count(),
+                'filter_role' => $role ?: 'Semua',
+            ]);
+
+            $fileName = 'users_export_' . date('Ymd_His') . '.csv';
+
+            $headers = [
+                'Content-Type'        => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+                'Pragma'              => 'no-cache',
+                'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires'             => '0',
+            ];
+
+            $callback = function () use ($users) {
+                $output = fopen('php://output', 'w');
+                // UTF-8 BOM untuk Excel
+                fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+                // CSV Header
+                fputcsv($output, ['ID', 'NPM / Identitas', 'Nama Lengkap', 'Username', 'Email', 'Role', 'Status', 'Tanggal Dibuat']);
+
+                foreach ($users as $u) {
+                    fputcsv($output, [
+                        $u->id,
+                        $u->npm ?? '-',
+                        $u->name,
+                        $u->username ?? '-',
+                        $u->email ?? '-',
+                        $u->role ?? 'Mahasiswa',
+                        $u->status ?? 'Aktif',
+                        $u->created_at ? $u->created_at->format('Y-m-d H:i:s') : '-',
+                    ]);
+                }
+
+                fclose($output);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal export data pengguna: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Endpoint API: Import Data Pengguna dari CSV/Excel (Item 7)
+     * POST /api/admin/users/import
+     */
+    public function apiImport(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|mimes:csv,txt|max:5120', // Max 5MB
+        ], [
+            'file.required' => 'File CSV wajib diunggah.',
+            'file.mimes'    => 'Format file harus berupa CSV (.csv atau .txt).',
+            'file.max'      => 'Ukuran file maksimal adalah 5MB.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $file = $request->file('file');
+            $handle = fopen($file->getRealPath(), 'r');
+
+            if (!$handle) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat membaca file CSV yang diunggah.',
+                ], 400);
+            }
+
+            // Baca baris pertama (header)
+            $header = fgetcsv($handle, 1000, ',');
+            if (!$header) {
+                fclose($handle);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File CSV kosong.',
+                ], 422);
+            }
+
+            // Normalisasi nama kolom header
+            $headerMap = [];
+            foreach ($header as $idx => $col) {
+                $cleanCol = strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $col)));
+                $headerMap[$cleanCol] = $idx;
+            }
+
+            $imported = 0;
+            $skipped = 0;
+            $errors = [];
+            $rowNum = 1;
+
+            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                $rowNum++;
+                // Skip empty lines
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+
+                $name     = trim($row[$headerMap['nama'] ?? $headerMap['nama lengkap'] ?? $headerMap['name'] ?? 0] ?? '');
+                $email    = trim($row[$headerMap['email'] ?? 1] ?? '');
+                $username = trim($row[$headerMap['username'] ?? 2] ?? '');
+                $role     = trim($row[$headerMap['role'] ?? 3] ?? 'Mahasiswa');
+                $npm      = trim($row[$headerMap['npm'] ?? $headerMap['npm / identitas'] ?? $headerMap['identity_number'] ?? 4] ?? '');
+                $password = trim($row[$headerMap['password'] ?? $headerMap['kata sandi'] ?? 5] ?? 'Siakad@123');
+                $status   = trim($row[$headerMap['status'] ?? 6] ?? 'Aktif');
+
+                if (empty($name) || empty($email)) {
+                    $skipped++;
+                    $errors[] = "Baris {$rowNum}: Nama dan Email tidak boleh kosong.";
+                    continue;
+                }
+
+                // Cek duplikasi email atau username
+                $existing = User::where('email', $email)
+                    ->when($username, fn($q) => $q->orWhere('username', $username))
+                    ->first();
+
+                if ($existing) {
+                    $skipped++;
+                    $errors[] = "Baris {$rowNum}: Email '{$email}' atau Username '{$username}' sudah terdaftar.";
+                    continue;
+                }
+
+                if (empty($username)) {
+                    $username = strtolower(explode('@', $email)[0]);
+                }
+
+                $newUser = new User();
+                $newUser->name          = $name;
+                $newUser->email         = strtolower($email);
+                $newUser->username      = $username;
+                $newUser->role          = in_array($role, ['Admin', 'Dosen Pengajar', 'Dosen Wali', 'Bendahara', 'Mahasiswa']) ? $role : 'Mahasiswa';
+                $newUser->npm           = $npm ?: null;
+                $newUser->password_hash = Hash::make($password ?: 'Siakad@123');
+                if (Schema::hasColumn('users', 'status')) {
+                    $newUser->status = $status ?: 'Aktif';
+                }
+                $newUser->save();
+
+                $imported++;
+            }
+
+            fclose($handle);
+
+            AuditLogger::log('IMPORT_USERS', 'Users', [
+                'imported_count' => $imported,
+                'skipped_count'  => $skipped,
+            ]);
+
+            return response()->json([
+                'success'  => true,
+                'message'  => "Import selesai: {$imported} pengguna berhasil ditambahkan, {$skipped} dilewati.",
+                'imported' => $imported,
+                'skipped'  => $skipped,
+                'errors'   => $errors,
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses import data pengguna: ' . $e->getMessage(),
             ], 500);
         }
     }
