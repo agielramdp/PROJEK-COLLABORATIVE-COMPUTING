@@ -4972,8 +4972,16 @@
             }
         }
 
+        let loggedInUser = null;
+
         // Show Authentication Success Modal
         function showSuccessModal(user) {
+            loggedInUser = user;
+            if (user) {
+                try {
+                    localStorage.setItem('siakad_user', JSON.stringify(user));
+                } catch (e) {}
+            }
             const modal = document.getElementById('successModal');
             const avatar = document.getElementById('modalUserAvatar');
             const name = document.getElementById('modalUserName');
@@ -4993,7 +5001,21 @@
 
         function openSimulatedDashboard() {
             document.getElementById('successModal').classList.remove('active');
-            showToast('Mengalihkan ke Portal Dashboard Akademik...', false);
+            const role = (loggedInUser && loggedInUser.role) ? loggedInUser.role.toLowerCase().replace(' ', '_') : '';
+
+            const roleRoutes = {
+                'admin':          { label: 'Dashboard Admin',          url: '/admin/dashboard' },
+                'mahasiswa':      { label: 'Dashboard Mahasiswa',       url: '/mahasiswa/dashboard' },
+                'dosen_wali':     { label: 'Dashboard Dosen Wali',      url: '/dosen-wali/dashboard' },
+                'dosen_pengajar': { label: 'Dashboard Dosen Pengajar',  url: '/dosen-pengajar/dashboard' },
+                'bendahara':      { label: 'Dashboard Bendahara',       url: '/bendahara/dashboard' },
+            };
+
+            const target = roleRoutes[role] || roleRoutes['admin'];
+            showToast('Mengalihkan ke ' + target.label + '...', false);
+            setTimeout(() => {
+                window.location.href = target.url;
+            }, 500);
         }
 
         // Toast Notification helper
