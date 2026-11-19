@@ -2,19 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EducationLevel extends Model
 {
-    protected $fillable = ['code', 'name', 'description', 'is_active'];
+    use HasFactory;
 
-    protected function casts(): array
-    {
-        return ['is_active' => 'boolean'];
-    }
+    protected $table = 'education_levels';
+
+    protected $fillable = [
+        'code',
+        'name',
+        'degree_title',
+        'standard_credits',
+        'standard_semesters',
+    ];
 
     public function studyPrograms()
     {
-        return $this->hasMany(StudyProgram::class);
+        return $this->hasMany(StudyProgram::class, 'education_level_id');
     }
 }

@@ -2,24 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Faculty extends Model
 {
-    protected $fillable = ['code', 'name', 'description', 'is_active'];
+    use HasFactory;
 
-    protected function casts(): array
-    {
-        return ['is_active' => 'boolean'];
-    }
+    protected $table = 'faculties';
+
+    protected $fillable = [
+        'code',
+        'name',
+        'dean_name',
+        'description',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function studyPrograms()
     {
-        return $this->hasMany(StudyProgram::class);
-    }
-
-    public function lecturers()
-    {
-        return $this->hasMany(Lecturer::class);
+        return $this->hasMany(StudyProgram::class, 'faculty_id');
     }
 }

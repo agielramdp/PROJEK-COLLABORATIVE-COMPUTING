@@ -2,44 +2,46 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StudyProgram extends Model
 {
-    protected $fillable = ['code', 'name', 'faculty_id', 'education_level_id', 'description', 'is_active'];
+    use HasFactory;
 
-    protected function casts(): array
-    {
-        return ['is_active' => 'boolean'];
-    }
+    protected $table = 'study_programs';
+
+    protected $fillable = [
+        'faculty_id',
+        'education_level_id',
+        'code',
+        'name',
+        'head_of_program',
+        'accreditation',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function faculty()
     {
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Faculty::class, 'faculty_id');
     }
 
     public function educationLevel()
     {
-        return $this->belongsTo(EducationLevel::class);
-    }
-
-    public function lecturers()
-    {
-        return $this->hasMany(Lecturer::class);
-    }
-
-    public function students()
-    {
-        return $this->hasMany(Student::class);
+        return $this->belongsTo(EducationLevel::class, 'education_level_id');
     }
 
     public function curriculums()
     {
-        return $this->hasMany(Curriculum::class);
+        return $this->hasMany(Curriculum::class, 'study_program_id');
     }
 
-    public function classes()
+    public function courses()
     {
-        return $this->hasMany(CourseClass::class);
+        return $this->hasMany(Course::class, 'study_program_id');
     }
 }

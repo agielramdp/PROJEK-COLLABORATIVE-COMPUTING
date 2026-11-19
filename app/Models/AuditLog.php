@@ -2,16 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditLog extends Model
 {
-    protected $fillable = ['user_id', 'activity_type', 'entity_name', 'entity_id', 'before_data', 'after_data', 'occurred_at', 'ip_address'];
+    use HasFactory;
 
-    protected function casts(): array
+    protected $table = 'audit_logs';
+
+    public $timestamps = false; // hanya menggunakan created_at
+
+    protected $fillable = [
+        'user_id',
+        'user_name',
+        'user_role',
+        'action',
+        'module',
+        'record_id',
+        'details',
+        'ip_address',
+        'user_agent',
+        'created_at',
+    ];
+
+    protected $casts = [
+        'details'    => 'array',
+        'created_at' => 'datetime',
+    ];
+
+    public function user()
     {
-        return ['before_data' => 'array', 'after_data' => 'array', 'occurred_at' => 'datetime'];
+        return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function user() { return $this->belongsTo(User::class); }
 }

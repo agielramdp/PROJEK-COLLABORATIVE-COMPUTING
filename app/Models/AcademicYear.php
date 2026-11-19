@@ -2,24 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
 {
-    protected $fillable = ['code', 'name', 'start_date', 'end_date', 'is_active'];
+    use HasFactory;
 
-    protected function casts(): array
-    {
-        return ['start_date' => 'date', 'end_date' => 'date', 'is_active' => 'boolean'];
-    }
+    protected $table = 'academic_years';
 
-    public function semesters()
-    {
-        return $this->hasMany(Semester::class);
-    }
+    protected $fillable = [
+        'year_name',
+        'semester',
+        'is_active',
+        'start_date',
+        'end_date',
+        'description',
+    ];
+
+    protected $casts = [
+        'is_active'  => 'boolean',
+        'start_date' => 'date',
+        'end_date'   => 'date',
+    ];
 
     public function krsPeriods()
     {
-        return $this->hasMany(KrsPeriod::class);
+        return $this->hasMany(KrsPeriod::class, 'academic_year_id');
+    }
+
+    public function courseClasses()
+    {
+        return $this->hasMany(CourseClass::class, 'academic_year_id');
+    }
+
+    public static function getActive()
+    {
+        return static::where('is_active', true)->first();
     }
 }

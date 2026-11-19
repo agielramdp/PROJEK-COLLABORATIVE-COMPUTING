@@ -2,20 +2,45 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class GradeSubmissionDeadline extends Model
 {
-    protected $fillable = ['academic_year_id', 'semester_id', 'course_id', 'class_id', 'unlocked_by', 'deadline_at', 'is_locked', 'notes'];
+    use HasFactory;
 
-    protected function casts(): array
+    protected $table = 'grade_submission_deadlines';
+
+    protected $fillable = [
+        'academic_year_id',
+        'grade_component',
+        'start_date',
+        'end_date',
+        'is_active',
+        'notes',
+    ];
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date'   => 'datetime',
+        'is_active'  => 'boolean',
+    ];
+
+    public function academicYear()
     {
-        return ['deadline_at' => 'datetime', 'is_locked' => 'boolean'];
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
     }
 
-    public function academicYear() { return $this->belongsTo(AcademicYear::class); }
-    public function semester() { return $this->belongsTo(Semester::class); }
-    public function course() { return $this->belongsTo(Course::class); }
-    public function courseClass() { return $this->belongsTo(CourseClass::class, 'class_id'); }
-    public function unlockedBy() { return $this->belongsTo(User::class, 'unlocked_by'); }
+    /**
+     * Cek apakah saat ini dalam batas waktu penginputan nilai
+     */
+    public function isOpenNow(): bool
+    {
+        if (!$this->is_active) {
+            return false;
+        }
+
+        return Carbon::now()->between($this->start_date, $this->end_date);
+    }
 }

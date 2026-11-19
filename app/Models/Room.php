@@ -2,17 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    protected $fillable = ['floor_id', 'code', 'name', 'capacity', 'room_type', 'is_active'];
+    use HasFactory;
 
-    protected function casts(): array
+    protected $table = 'rooms';
+
+    protected $fillable = [
+        'building_id',
+        'code',
+        'name',
+        'floor',
+        'capacity',
+        'room_type',
+        'facilities',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'floor'     => 'integer',
+        'capacity'  => 'integer',
+    ];
+
+    public function building()
     {
-        return ['capacity' => 'integer', 'is_active' => 'boolean'];
+        return $this->belongsTo(Building::class, 'building_id');
     }
 
-    public function floor() { return $this->belongsTo(Floor::class); }
-    public function schedules() { return $this->hasMany(ClassSchedule::class); }
+    public function classSchedules()
+    {
+        return $this->hasMany(ClassSchedule::class, 'room_id');
+    }
+
+    public function examSchedules()
+    {
+        return $this->hasMany(ExamSchedule::class, 'room_id');
+    }
 }

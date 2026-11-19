@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password_hash',
         'role',
         'google_id',
+        'status',
     ];
 
     /**
@@ -74,28 +75,57 @@ class User extends Authenticatable
         return $this->hasMany(OtpCode::class, 'user_id');
     }
 
-    public function roles()
+    /**
+     * Relasi ke tabel roles melalui user_has_roles
+     */
+    public function assignedRoles()
     {
-        return $this->belongsToMany(Role::class, 'user_roles');
+        return $this->belongsToMany(Role::class, 'user_has_roles', 'user_id', 'role_id');
     }
 
-    public function lecturer()
+    /**
+     * Cek apakah user memiliki role tertentu (baik via kolom 'role' maupun pivot)
+     */
+    public function hasRole(string $roleName): bool
     {
-        return $this->hasOne(Lecturer::class);
+        if (strcasecmp($this->role ?? '', $roleName) === 0) {
+            return true;
+        }
+
+        return $this->assignedRoles()->where(function ($q) use ($roleName) {
+            $q->where('name', $roleName)->orWhere('slug', strtolower(str_replace(' ', '_', $roleName)));
+        })->exists();
     }
 
-    public function student()
+    /**
+     * Relasi status kemahasiswaan
+     */
+    public function studentStatuses()
     {
-        return $this->hasOne(Student::class);
+        return $this->hasMany(StudentStatus::class, 'student_id');
     }
 
-    public function auditLogs()
+    /**
+     * Relasi dosen pembimbing akademik (untuk mahasiswa)
+     */
+    public function academicAdvisors()
     {
-        return $this->hasMany(AuditLog::class);
+        return $this->hasMany(AcademicAdvisor::class, 'student_id');
     }
 
-    public function importLogs()
+    /**
+     * Relasi mahasiswa bimbingan (untuk dosen wali)
+     */
+    public function adviseeStudents()
     {
-        return $this->hasMany(ImportLog::class);
+        return $this->hasMany(AcademicAdvisor::class, 'lecturer_id');
+    }
+
+    /**
+     * Relasi kelas yang diampu (untuk dosen)
+     */
+    public function teachingClasses()
+    {
+        return $this->hasMany(ClassLecturer::class, 'lecturer_id');
     }
 }
