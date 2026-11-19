@@ -11,13 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('users')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('mahasiswa')->after('name');
-            $table->string('identity_number')->nullable()->after('email');
-            $table->string('avatar')->nullable()->after('identity_number');
-            $table->string('google_id')->nullable()->after('avatar');
-            $table->string('otp_code')->nullable()->after('google_id');
-            $table->timestamp('otp_expires_at')->nullable()->after('otp_code');
+            if (! Schema::hasColumn('users', 'role')) {
+                $table->string('role')->default('mahasiswa')->after('name');
+            }
+            if (! Schema::hasColumn('users', 'identity_number')) {
+                $table->string('identity_number')->nullable()->after('email');
+            }
+            if (! Schema::hasColumn('users', 'avatar')) {
+                $table->string('avatar')->nullable()->after('identity_number');
+            }
+            if (! Schema::hasColumn('users', 'google_id')) {
+                $table->string('google_id')->nullable()->after('avatar');
+            }
+            if (! Schema::hasColumn('users', 'otp_code')) {
+                $table->string('otp_code')->nullable()->after('google_id');
+            }
+            if (! Schema::hasColumn('users', 'otp_expires_at')) {
+                $table->timestamp('otp_expires_at')->nullable()->after('otp_code');
+            }
         });
     }
 
@@ -26,15 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn([
-                'role',
-                'identity_number',
-                'avatar',
-                'google_id',
-                'otp_code',
-                'otp_expires_at',
-            ]);
-        });
+        // Preserve the existing customized users table when rolling back.
     }
 };

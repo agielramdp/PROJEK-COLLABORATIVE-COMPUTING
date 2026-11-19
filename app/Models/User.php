@@ -73,4 +73,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(OtpCode::class, 'user_id');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function lecturer()
+    {
+        return $this->hasOne(Lecturer::class);
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
+    public function importLogs()
+    {
+        return $this->hasMany(ImportLog::class);
+    }
 }
