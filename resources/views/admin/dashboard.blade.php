@@ -933,7 +933,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-item">
+                <a href="{{ route('admin.master-data') }}" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -942,7 +942,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-item">
+                <a href="{{ route('admin.schedules.index') }}" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                         <line x1="16" y1="2" x2="16" y2="6"/>
@@ -1072,9 +1072,9 @@
                         </div>
                         <div class="stat-info-col">
                             <span class="stat-header-label">Total Mahasiswa</span>
-                            <span class="stat-main-number">2.450</span>
+                            <span class="stat-main-number" id="statTotalMahasiswa">0</span>
                             <span class="stat-trend up">
-                                <span>↑ 12%</span> dari semester lalu
+                                <span>Data Aktif</span> dari database
                             </span>
                         </div>
                     </div>
@@ -1096,9 +1096,9 @@
                         </div>
                         <div class="stat-info-col">
                             <span class="stat-header-label">Total Dosen</span>
-                            <span class="stat-main-number">128</span>
+                            <span class="stat-main-number" id="statTotalDosen">0</span>
                             <span class="stat-trend up">
-                                <span>↑ 8%</span> dari semester lalu
+                                <span>Data Aktif</span> dari database
                             </span>
                         </div>
                     </div>
@@ -1110,7 +1110,7 @@
                 </a>
 
                 <!-- 3. Program Studi -->
-                <a href="#" class="stat-card">
+                <a href="{{ route('admin.master-data') }}" class="stat-card">
                     <div class="stat-card-left">
                         <div class="stat-icon-circle slate">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1120,9 +1120,9 @@
                         </div>
                         <div class="stat-info-col">
                             <span class="stat-header-label">Program Studi</span>
-                            <span class="stat-main-number">12</span>
+                            <span class="stat-main-number" id="statProgramStudi">0</span>
                             <span class="stat-trend up">
-                                <span>↑ 0%</span> dari semester lalu
+                                <span id="statFakultasSub">0 Fakultas</span> terdaftar
                             </span>
                         </div>
                     </div>
@@ -1134,7 +1134,7 @@
                 </a>
 
                 <!-- 4. Mata Kuliah -->
-                <a href="#" class="stat-card">
+                <a href="{{ route('admin.master-data') }}" class="stat-card">
                     <div class="stat-card-left">
                         <div class="stat-icon-circle dark">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1144,9 +1144,9 @@
                         </div>
                         <div class="stat-info-col">
                             <span class="stat-header-label">Mata Kuliah</span>
-                            <span class="stat-main-number">186</span>
-                            <span class="stat-trend down">
-                                <span>↓ 4%</span> dari semester lalu
+                            <span class="stat-main-number" id="statMataKuliah">0</span>
+                            <span class="stat-trend neutral">
+                                <span id="statJadwalSub">0 Jadwal</span> aktif
                             </span>
                         </div>
                     </div>
@@ -1196,7 +1196,7 @@
                                 <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
                                 <path d="M22 12A10 10 0 0 0 12 2v10z"/>
                             </svg>
-                            <h2 class="card-header-title">Statistik Mahasiswa</h2>
+                            <h2 class="card-header-title">Distribusi Program Studi</h2>
                         </div>
                     </div>
                     <div class="card-body">
@@ -1204,31 +1204,13 @@
                             <div class="donut-chart-box">
                                 <canvas id="donutChartCanvas"></canvas>
                                 <div class="donut-center-info">
-                                    <span class="donut-center-sub">Total</span>
-                                    <span class="donut-center-val">2.450</span>
+                                    <span class="donut-center-sub">Total Prodi</span>
+                                    <span class="donut-center-val" id="donutCenterVal">0</span>
                                 </div>
                             </div>
-                            <div class="donut-legend-list">
+                            <div class="donut-legend-list" id="donutLegendList">
                                 <div class="legend-row">
-                                    <div class="legend-name-group">
-                                        <div class="legend-dot-circle" style="background-color: #0e2954;"></div>
-                                        <span class="legend-name">Teknik Informatika</span>
-                                    </div>
-                                    <span class="legend-percent">38%</span>
-                                </div>
-                                <div class="legend-row">
-                                    <div class="legend-name-group">
-                                        <div class="legend-dot-circle" style="background-color: #3b82f6;"></div>
-                                        <span class="legend-name">Sistem Informasi</span>
-                                    </div>
-                                    <span class="legend-percent">32%</span>
-                                </div>
-                                <div class="legend-row">
-                                    <div class="legend-name-group">
-                                        <div class="legend-dot-circle" style="background-color: #fde68a;"></div>
-                                        <span class="legend-name">Manajemen</span>
-                                    </div>
-                                    <span class="legend-percent">30%</span>
+                                    <span class="legend-name" style="color:#64748b;">Memuat data fakultas...</span>
                                 </div>
                             </div>
                         </div>
@@ -1256,88 +1238,8 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <div class="activity-list">
-                            <!-- 1. Mahasiswa Baru -->
-                            <div class="activity-item">
-                                <div class="activity-left">
-                                    <div class="activity-icon-badge green">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="activity-text-col">
-                                        <span class="activity-title">Mahasiswa baru ditambahkan</span>
-                                        <span class="activity-subtitle">Marlinaawati [NIM 18123008] telah ditambahkan ke program studi sistem informasi</span>
-                                    </div>
-                                </div>
-                                <div class="activity-time">
-                                    <div>15 Okt 2026</div>
-                                    <div>10:24</div>
-                                </div>
-                            </div>
-
-                            <!-- 2. Data Dosen -->
-                            <div class="activity-item">
-                                <div class="activity-left">
-                                    <div class="activity-icon-badge blue">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="activity-text-col">
-                                        <span class="activity-title">Data dosen diperbarui</span>
-                                        <span class="activity-subtitle">Dr. Ir. Rahmawati, S.T., M.Kom. telah memperbarui data profil.</span>
-                                    </div>
-                                </div>
-                                <div class="activity-time">
-                                    <div>16 Okt 2026</div>
-                                    <div>15:37</div>
-                                </div>
-                            </div>
-
-                            <!-- 3. Jadwal Kuliah -->
-                            <div class="activity-item">
-                                <div class="activity-left">
-                                    <div class="activity-icon-badge purple">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                            <line x1="16" y1="2" x2="16" y2="6"/>
-                                            <line x1="8" y1="2" x2="8" y2="6"/>
-                                            <line x1="3" y1="10" x2="21" y2="10"/>
-                                        </svg>
-                                    </div>
-                                    <div class="activity-text-col">
-                                        <span class="activity-title">Jadwal kuliah diperbarui</span>
-                                        <span class="activity-subtitle">Jadwal kuliah semester Genap 2024/2025 sudah diperbarui.</span>
-                                    </div>
-                                </div>
-                                <div class="activity-time">
-                                    <div>17 Okt 2026</div>
-                                    <div>08:18</div>
-                                </div>
-                            </div>
-
-                            <!-- 4. Nilai Diinput -->
-                            <div class="activity-item">
-                                <div class="activity-left">
-                                    <div class="activity-icon-badge orange">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                            <line x1="16" y1="13" x2="8" y2="13"/>
-                                            <line x1="16" y1="17" x2="8" y2="17"/>
-                                        </svg>
-                                    </div>
-                                    <div class="activity-text-col">
-                                        <span class="activity-title">Nilai diinput</span>
-                                        <span class="activity-subtitle">Nilai mata kuliah pemrograman Web telah diinput oleh dosen</span>
-                                    </div>
-                                </div>
-                                <div class="activity-time">
-                                    <div>18 Okt 2026</div>
-                                    <div>14:02</div>
-                                </div>
-                            </div>
+                        <div class="activity-list" id="activityList">
+                            <div style="font-size:13px; color:#64748b; padding:12px 0;">Memuat aktivitas terbaru...</div>
                         </div>
                     </div>
                 </div>
@@ -1362,78 +1264,8 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <div class="calendar-list">
-                            <!-- 1 -->
-                            <div class="calendar-item">
-                                <div class="calendar-item-left">
-                                    <div class="date-box">
-                                        <span class="db-day">16</span>
-                                        <span class="db-month">Jan</span>
-                                    </div>
-                                    <div class="calendar-details">
-                                        <span class="calendar-title">Pendaftaran KRS Semester Genap 2024/2025</span>
-                                        <span class="calendar-sub">16 Jan 2025 - 27 Jan 2025</span>
-                                    </div>
-                                </div>
-                                <span class="category-badge akademik">
-                                    <span class="cat-dot"></span>
-                                    Akademik
-                                </span>
-                            </div>
-
-                            <!-- 2 -->
-                            <div class="calendar-item">
-                                <div class="calendar-item-left">
-                                    <div class="date-box">
-                                        <span class="db-day">30</span>
-                                        <span class="db-month">Jan</span>
-                                    </div>
-                                    <div class="calendar-details">
-                                        <span class="calendar-title">Batas Akhir Perubahan KRS</span>
-                                        <span class="calendar-sub">30 Jan 2025 - 31 Jan 2025</span>
-                                    </div>
-                                </div>
-                                <span class="category-badge akademik-warn">
-                                    <span class="cat-dot"></span>
-                                    Akademik
-                                </span>
-                            </div>
-
-                            <!-- 3 -->
-                            <div class="calendar-item">
-                                <div class="calendar-item-left">
-                                    <div class="date-box">
-                                        <span class="db-day">14</span>
-                                        <span class="db-month">Jul</span>
-                                    </div>
-                                    <div class="calendar-details">
-                                        <span class="calendar-title">Ujian Tengah Semester (UTS)</span>
-                                        <span class="calendar-sub">14 Jul 2025 - 25 Jul 2025</span>
-                                    </div>
-                                </div>
-                                <span class="category-badge ujian">
-                                    <span class="cat-dot"></span>
-                                    Ujian
-                                </span>
-                            </div>
-
-                            <!-- 4 -->
-                            <div class="calendar-item">
-                                <div class="calendar-item-left">
-                                    <div class="date-box">
-                                        <span class="db-day">1</span>
-                                        <span class="db-month">Aug</span>
-                                    </div>
-                                    <div class="calendar-details">
-                                        <span class="calendar-title">Batas Akhir Input Nilai</span>
-                                        <span class="calendar-sub">1 Agustus 2025</span>
-                                    </div>
-                                </div>
-                                <span class="category-badge administrasi">
-                                    <span class="cat-dot"></span>
-                                    Administrasi
-                                </span>
-                            </div>
+                        <div class="calendar-list" id="calendarList">
+                            <div style="font-size:13px; color:#64748b; padding:12px 0;">Memuat kalender akademik...</div>
                         </div>
                     </div>
                 </div>
@@ -1445,109 +1277,169 @@
          JAVASCRIPT: CHARTS INITIALIZATION
          ======================================================== -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Line Chart "Statistik Mahasiswa"
-            const lineCtx = document.getElementById('lineChartCanvas').getContext('2d');
-            
-            // Create nice blue gradient fill
-            const blueGradient = lineCtx.createLinearGradient(0, 0, 0, 260);
-            blueGradient.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
-            blueGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        }
 
-            new Chart(lineCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-                    datasets: [{
-                        label: 'Jumlah Mahasiswa',
-                        data: [1700, 1600, 1800, 1950, 1850, 2100],
-                        borderColor: '#2563eb',
-                        borderWidth: 2.5,
-                        backgroundColor: blueGradient,
-                        fill: true,
-                        tension: 0.35,
-                        pointBackgroundColor: '#2563eb',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            titleFont: { family: 'Plus Jakarta Sans', size: 12 },
-                            bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
-                            padding: 10,
-                            cornerRadius: 8,
-                        }
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/admin/dashboard/stats', { headers: { 'Accept': 'application/json' } });
+                const json = await res.json();
+                if (!res.ok || !json.success) throw new Error(json.message || 'Gagal memuat data');
+                const d = json.data;
+
+                // 1. Stat Cards (100% database)
+                document.getElementById('statTotalMahasiswa').textContent = (d.total_mahasiswa ?? 0).toLocaleString('id-ID');
+                document.getElementById('statTotalDosen').textContent = (d.total_dosen ?? 0).toLocaleString('id-ID');
+                document.getElementById('statProgramStudi').textContent = (d.program_studi ?? 0).toLocaleString('id-ID');
+                document.getElementById('statFakultasSub').textContent = `${d.total_fakultas ?? 0} Fakultas`;
+                document.getElementById('statMataKuliah').textContent = (d.mata_kuliah ?? 0).toLocaleString('id-ID');
+                document.getElementById('statJadwalSub').textContent = `${d.total_jadwal ?? 0} Jadwal`;
+
+                // 2. Line Chart "Statistik Mahasiswa"
+                const lineCtx = document.getElementById('lineChartCanvas').getContext('2d');
+                const blueGradient = lineCtx.createLinearGradient(0, 0, 0, 260);
+                blueGradient.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+                blueGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+                new Chart(lineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: d.monthly_students?.labels || [],
+                        datasets: [{
+                            label: 'Jumlah Mahasiswa',
+                            data: d.monthly_students?.counts || [],
+                            borderColor: '#2563eb',
+                            borderWidth: 2.5,
+                            backgroundColor: blueGradient,
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#2563eb',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                        }]
                     },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                font: { family: 'Plus Jakarta Sans', size: 11 },
-                                color: '#64748b'
-                            }
-                        },
-                        y: {
-                            min: 0,
-                            max: 3000,
-                            ticks: {
-                                stepSize: 500,
-                                font: { family: 'Plus Jakarta Sans', size: 11 },
-                                color: '#64748b',
-                                callback: function(val) {
-                                    return val.toLocaleString('id-ID');
-                                }
-                            },
-                            grid: {
-                                color: '#f1f5f9'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, color: '#64748b' } },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { precision: 0, font: { family: 'Plus Jakarta Sans', size: 11 }, color: '#64748b' },
+                                grid: { color: '#f1f5f9' }
                             }
                         }
                     }
-                }
-            });
+                });
 
-            // 2. Donut Chart "Statistik Mahasiswa"
-            const donutCtx = document.getElementById('donutChartCanvas').getContext('2d');
-            new Chart(donutCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Teknik Informatika', 'Sistem Informasi', 'Manajemen'],
-                    datasets: [{
-                        data: [38, 32, 30],
-                        backgroundColor: ['#0e2954', '#3b82f6', '#fde68a'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '72%',
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            titleFont: { family: 'Plus Jakarta Sans', size: 12 },
-                            bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
-                            padding: 10,
-                            cornerRadius: 8,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': ' + context.raw + '%';
+                // 3. Donut Chart & Legend (Distribusi Prodi per Fakultas)
+                document.getElementById('donutCenterVal').textContent = (d.program_studi ?? 0).toLocaleString('id-ID');
+                const dist = d.faculty_distribution || [];
+                const palette = ['#0e2954', '#3b82f6', '#fde68a', '#10b981', '#8b5cf6', '#f97316'];
+                const donutCtx = document.getElementById('donutChartCanvas').getContext('2d');
+                new Chart(donutCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: dist.length ? dist.map(x => x.label) : ['Belum ada data'],
+                        datasets: [{
+                            data: dist.length ? dist.map(x => x.count) : [1],
+                            backgroundColor: dist.length ? dist.map((_, i) => palette[i % palette.length]) : ['#e2e8f0'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff',
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '72%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => dist.length ? ` ${ctx.label}: ${ctx.raw} Prodi` : ' Belum ada data'
                                 }
                             }
                         }
                     }
+                });
+
+                const legendEl = document.getElementById('donutLegendList');
+                if (!dist.length) {
+                    legendEl.innerHTML = `<div class="legend-row"><span class="legend-name" style="color:#64748b;">Belum ada data fakultas.</span></div>`;
+                } else {
+                    legendEl.innerHTML = dist.map((item, i) => `
+                        <div class="legend-row">
+                            <div class="legend-name-group">
+                                <div class="legend-dot-circle" style="background-color: ${palette[i % palette.length]};"></div>
+                                <span class="legend-name">${escapeHtml(item.label)}</span>
+                            </div>
+                            <span class="legend-percent">${item.percentage}%</span>
+                        </div>
+                    `).join('');
                 }
-            });
+
+                // 4. Aktivitas Terbaru (Audit Logs)
+                const actEl = document.getElementById('activityList');
+                const acts = d.recent_activities || [];
+                if (!acts.length) {
+                    actEl.innerHTML = `<div style="font-size:13px; color:#64748b; padding:16px 0; text-align:center;">Belum ada aktivitas tercatat di database.</div>`;
+                } else {
+                    const badges = ['green', 'blue', 'purple', 'orange'];
+                    actEl.innerHTML = acts.map((a, i) => `
+                        <div class="activity-item">
+                            <div class="activity-left">
+                                <div class="activity-icon-badge ${badges[i % badges.length]}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="9"/>
+                                        <polyline points="12 7 12 12 15 14"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-text-col">
+                                    <span class="activity-title">${escapeHtml(a.action)}</span>
+                                    <span class="activity-subtitle">${escapeHtml(a.module)} • oleh ${escapeHtml(a.user_name)}</span>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div>${escapeHtml(a.created_at)}</div>
+                                <div>${escapeHtml(a.time)}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // 5. Kalender Akademik
+                const calEl = document.getElementById('calendarList');
+                const cals = d.calendar_events || [];
+                if (!cals.length) {
+                    calEl.innerHTML = `<div style="font-size:13px; color:#64748b; padding:16px 0; text-align:center;">Belum ada agenda kalender akademik di database.</div>`;
+                } else {
+                    calEl.innerHTML = cals.map(ev => `
+                        <div class="calendar-item">
+                            <div class="calendar-item-left">
+                                <div class="date-box">
+                                    <span class="db-day">${escapeHtml(ev.day)}</span>
+                                    <span class="db-month">${escapeHtml(ev.month)}</span>
+                                </div>
+                                <div class="calendar-details">
+                                    <span class="calendar-title">${escapeHtml(ev.title)}</span>
+                                    <span class="calendar-sub">${escapeHtml(ev.range)}</span>
+                                </div>
+                            </div>
+                            <span class="category-badge akademik">
+                                <span class="cat-dot"></span>
+                                ${escapeHtml(ev.event_type)}
+                            </span>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
         });
 
         function handleLogout() {

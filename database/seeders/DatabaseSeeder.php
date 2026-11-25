@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(SiakadMasterSeeder::class);
+        $this->call([
+            SiakadMasterSeeder::class,
+            AcademicMasterSeeder::class,
+        ]);
 
         // 1. Mahasiswa (Primary demo matching Google: mahasiswa123@gmail.com)
         User::updateOrCreate(

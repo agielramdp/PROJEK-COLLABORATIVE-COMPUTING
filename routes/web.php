@@ -61,6 +61,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Manajemen Pengguna
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/manajemen-pengguna', [AdminUserController::class, 'index'])->name('users.alias');
+
+    // Master Data Akademik
+    Route::get('/master-data', [AdminDashboardController::class, 'masterData'])->name('master-data');
+
+    // Jadwal Kuliah & Ujian
+    Route::get('/jadwal', [AdminDashboardController::class, 'schedules'])->name('schedules.index');
 });
 
 // Admin Route Aliases / Backward Compatibility
